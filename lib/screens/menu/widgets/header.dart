@@ -28,7 +28,7 @@ class Header extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    ' Joseffe!',
+                    ' Ishan!',
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
