@@ -1,4 +1,4 @@
-import 'dart:ui';
+// BMI calculation
 
 import 'package:flutter/material.dart';
 import '../../widgets/header.dart';
@@ -64,15 +64,15 @@ class App05UI extends State<App05> {
         children: [
           header(context, title),
           Container(
-              margin: const EdgeInsets.symmetric(horizontal: 24),
+              margin: const EdgeInsets.symmetric(horizontal: 150),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(16),
                 child: SizedBox(
-                  height: 180,
+                  height: 280,
                   width: double.infinity,
                   child: Image.network(
-                    'https://a.espncdn.com/photo/2023/0714/r1197560_1296x729_16-9.jpg',
-                    fit: BoxFit.cover,
+                    'https://st2.depositphotos.com/1007566/5938/v/450/depositphotos_59384119-stock-illustration-fitness-design.jpg',
+                    fit: BoxFit.fitWidth,
                   ),
                 ),
               )),

@@ -20,7 +20,7 @@ Widget info(BuildContext context) {
                 const SizedBox(height: 32),
                 grade(context),
                 const SizedBox(height: 32),
-                Text('I. Hegde - 9477\n',
+                Text('Ishan Hegde - 9477\n',
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 12,
@@ -56,7 +56,7 @@ Widget collegeTag(BuildContext context) {
         color: Theme.of(context).colorScheme.primary.withOpacity(.1),
         borderRadius: BorderRadius.circular(24)),
     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-    child: Text('CRCE',
+    child: Text('Current Learning - CRCE',
         style: TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w900,

@@ -28,32 +28,36 @@ class App07UI extends State<App07> {
   Widget build(BuildContext context) {
     Map<String, dynamic>? args =
         ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
-    String title = args?['title'] ?? 'Default Title';
+    String title = args?['title'] ?? 'Assignments';
 
     final List<Item> items = [
       Item(
-        src: 'https://imgnike-a.akamaihd.net/250x250/027648DD.jpg',
-        title: 'Jordan x J Balvin',
-        description: 'Casual',
-        price: 399.99,
+        src:
+            'https://media.licdn.com/dms/image/C4E0BAQFfYevcaYPy6A/company-logo_200_200/0/1630612004940/fr_conceicao_rodrigues_college_of_engineering_logo?e=1706745600&v=beta&t=-z6t3X2S2PVwnpmIjAh7JZdvTNR46c9jAQJDNmBWRas',
+        title: 'SE Assign 2',
+        description: 'Pending',
+        price: 0,
       ),
       Item(
-        src: 'https://imgnike-a.akamaihd.net/250x250/025685NX.jpg',
-        title: 'Bolsa Transversal Nike Heritage Unissex',
-        description: 'Treino & Academia',
-        price: 229.99,
+        src:
+            'https://media.licdn.com/dms/image/C4E0BAQFfYevcaYPy6A/company-logo_200_200/0/1630612004940/fr_conceicao_rodrigues_college_of_engineering_logo?e=1706745600&v=beta&t=-z6t3X2S2PVwnpmIjAh7JZdvTNR46c9jAQJDNmBWRas',
+        title: 'CE Assign 2',
+        description: 'Pending',
+        price: 0,
       ),
       Item(
-        src: 'https://imgnike-a.akamaihd.net/360x360/027173BP.jpg',
-        title: 'Camiseta Jordan Paris Saint-Germain Masculina',
-        description: 'Casual',
-        price: 249.99,
+        src:
+            'https://media.licdn.com/dms/image/C4E0BAQFfYevcaYPy6A/company-logo_200_200/0/1630612004940/fr_conceicao_rodrigues_college_of_engineering_logo?e=1706745600&v=beta&t=-z6t3X2S2PVwnpmIjAh7JZdvTNR46c9jAQJDNmBWRas',
+        title: 'WT Assign',
+        description: 'Completed',
+        price: 0,
       ),
       Item(
-        src: 'https://imgnike-a.akamaihd.net/360x360/0137025B.jpg',
-        title: 'Tênis Nike Court Vision Low Next Nature Masculino',
-        description: 'Casual',
-        price: 539.99,
+        src:
+            'https://media.licdn.com/dms/image/C4E0BAQFfYevcaYPy6A/company-logo_200_200/0/1630612004940/fr_conceicao_rodrigues_college_of_engineering_logo?e=1706745600&v=beta&t=-z6t3X2S2PVwnpmIjAh7JZdvTNR46c9jAQJDNmBWRas',
+        title: 'PCE Skit',
+        description: 'Pending',
+        price: 0,
       ),
     ];
 
@@ -141,7 +145,7 @@ Widget buildItem(BuildContext context, String src, String title,
           const SizedBox(height: 8),
           ElevatedButton(
             onPressed: onAddToCart,
-            child: const Text('Add to cart'),
+            child: const Text('Mark as Done'),
           )
         ],
       ));

@@ -16,7 +16,7 @@ class ProfilePersonalUI extends State<ProfilePersonal> {
         body: SafeArea(
             child: Column(
       children: [
-        header(context, 'Personal'),
+        header(context, 'Tech Notice'),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Container(
@@ -26,7 +26,7 @@ class ProfilePersonalUI extends State<ProfilePersonal> {
                 borderRadius: BorderRadius.circular(16),
                 color: Theme.of(context).colorScheme.surface),
             child: Text(
-              'Passionate about technology and innovation, I have been developing, since 2019, year that I started the Systems Development course linked to High School, personal, academic and freelance projects as a Full Stack developer and UI/UX Designer. My main Stack is JavaScript and its frameworks for web and mobile.',
+              'Synergy cancelled for 2023.',
               textAlign: TextAlign.justify,
               style: TextStyle(
                 fontSize: 16,

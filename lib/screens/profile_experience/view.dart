@@ -16,7 +16,7 @@ class ProfileExperienceUI extends State<ProfileExperience> {
         body: SafeArea(
             child: Column(
       children: [
-        header(context, 'Experience'),
+        header(context, 'Sports Notice'),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Container(

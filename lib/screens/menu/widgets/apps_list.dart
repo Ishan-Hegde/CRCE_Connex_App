@@ -20,7 +20,7 @@ Widget appsList(BuildContext context) {
         item(context, '8', 'Student Newsletter', '/app11'),
         // item(context, '9', 'My Profile with Drawer Navigation', '/app12'),
         // item(context, '10', 'My Profile with Bottom Navigation Bar', '/app13'),
-        item(context, '9', 'My Profile with Tab Bar', '/app14'),
+        item(context, '9', 'Official Notice Board', '/app14'),
       ]));
 }
 

@@ -37,15 +37,15 @@ class App13State extends State<App13> {
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
-            label: 'Personal',
+            label: 'Tech Notice',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.school),
-            label: 'Formation',
+            label: 'Non Tech Notice',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.work),
-            label: 'Experience',
+            label: 'Sports Notice',
           ),
         ],
       ),

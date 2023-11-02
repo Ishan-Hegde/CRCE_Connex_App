@@ -4,8 +4,6 @@ import '../profile_personal/view.dart';
 import '../profile_formation/view.dart';
 import '../profile_experience/view.dart';
 
-import '../../widgets/header.dart';
-
 class App12 extends StatefulWidget {
   const App12({super.key});
 
@@ -25,7 +23,7 @@ class App12UI extends State<App12> {
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> _pages = [
+    final List<Widget> pages = [
       const ProfilePersonal(),
       const ProfileFormation(),
       const ProfileExperience(),
@@ -45,7 +43,7 @@ class App12UI extends State<App12> {
         ),
       ),
       drawer: _drawer(context),
-      body: SafeArea(child: _pages[_currentIndex]),
+      body: SafeArea(child: pages[_currentIndex]),
     );
   }
 
@@ -72,14 +70,14 @@ class App12UI extends State<App12> {
                 ),
               ),
               const SizedBox(height: 20),
-              Text('Shantanu Karekar',
+              Text('Notices',
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Theme.of(context).colorScheme.onBackground)),
               const SizedBox(height: 32),
               ListTile(
                 title: Text(
-                  'Personal',
+                  'Tech Notice',
                   style: TextStyle(
                       color: Theme.of(context).colorScheme.onBackground,
                       fontWeight: FontWeight.bold),
@@ -93,7 +91,7 @@ class App12UI extends State<App12> {
               ),
               ListTile(
                 title: Text(
-                  'Formation',
+                  'Non Tech Notice',
                   style: TextStyle(
                       color: Theme.of(context).colorScheme.onBackground,
                       fontWeight: FontWeight.bold),
@@ -107,7 +105,7 @@ class App12UI extends State<App12> {
               ),
               ListTile(
                 title: Text(
-                  'Experience',
+                  'Sports Notice',
                   style: TextStyle(
                       color: Theme.of(context).colorScheme.onBackground,
                       fontWeight: FontWeight.bold),

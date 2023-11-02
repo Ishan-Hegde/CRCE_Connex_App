@@ -17,9 +17,9 @@ class App14 extends StatelessWidget {
           toolbarHeight: 0,
           bottom: const TabBar(
             tabs: [
-              Tab(icon: Icon(Icons.person), text: 'Personal'),
-              Tab(icon: Icon(Icons.school), text: 'Formation'),
-              Tab(icon: Icon(Icons.work), text: 'Experience'),
+              Tab(icon: Icon(Icons.person), text: 'Tech Notice'),
+              Tab(icon: Icon(Icons.school), text: 'Non Tech Notice'),
+              Tab(icon: Icon(Icons.work), text: 'Sports Notice'),
             ],
           ),
         ),

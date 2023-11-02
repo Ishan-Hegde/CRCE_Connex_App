@@ -16,7 +16,7 @@ class ProfileFormationUI extends State<ProfileFormation> {
         body: SafeArea(
             child: Column(
       children: [
-        header(context, 'Formation'),
+        header(context, 'Non Tech Notice'),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Container(
@@ -30,7 +30,7 @@ class ProfileFormationUI extends State<ProfileFormation> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'ETEC de Guaianazes | DS',
+                    'Colgate Internship drive | TPC',
                     style: TextStyle(
                       fontSize: 16,
                       height: 1.5,
@@ -38,7 +38,7 @@ class ProfileFormationUI extends State<ProfileFormation> {
                     ),
                   ),
                   Text(
-                    '2019 - 2021',
+                    'Oct 2023',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
@@ -53,7 +53,7 @@ class ProfileFormationUI extends State<ProfileFormation> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'FIAP | Internet Systems',
+                    'General Mills | TPC',
                     style: TextStyle(
                       fontSize: 16,
                       height: 1.5,
@@ -61,7 +61,7 @@ class ProfileFormationUI extends State<ProfileFormation> {
                     ),
                   ),
                   Text(
-                    '2022 - 2023/24',
+                    'Nov 2023',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
