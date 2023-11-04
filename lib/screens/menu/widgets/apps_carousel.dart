@@ -5,7 +5,7 @@ Widget appsCarousel(BuildContext context) {
     Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: Text(
-          'Checkpoint #1',
+          'Featured',
           style: TextStyle(
             fontWeight: FontWeight.w900,
             color: Theme.of(context).colorScheme.onBackground,
@@ -19,7 +19,7 @@ Widget appsCarousel(BuildContext context) {
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Row(
             children: [
-              item(context, '1', 'My profile', '/app01'),
+              item(context, '1', 'Profile', '/app01'),
               const SizedBox(width: 8),
               item(context, '2', 'Default Counter', '/app02'),
               const SizedBox(width: 8),
@@ -27,7 +27,7 @@ Widget appsCarousel(BuildContext context) {
               // const SizedBox(width: 8),
               // item(context, '4', 'Alcohol or Gasoline', '/app04'),
               // const SizedBox(width: 8),
-              item(context, '3', 'BMI calculation for Student', '/app05'),
+              item(context, '3', 'BMI Calculation', '/app05'),
               const SizedBox(width: 8),
               // item(context, '6', 'Random number game', '/app06'),
             ],

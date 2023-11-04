@@ -1,4 +1,4 @@
 {
     "cmake.sourceDirectory": "C:/Users/hegde/Desktop/app/connex/crce_connex-master/CRCE_Connex_App/linux",
-    "java.configuration.updateBuildConfiguration": "interactive"
+    "java.configuration.updateBuildConfiguration": "automatic"
 }

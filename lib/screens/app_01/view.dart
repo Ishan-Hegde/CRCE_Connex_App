@@ -24,7 +24,7 @@ class App01 extends StatelessWidget {
               child: Row(
                 children: [
                   Text(
-                    "Name: Ishan Hegde \nRoll Number: 9477 \nYear: TE ECS",
+                    "Name: Ishan Hegde \nRoll Number: 9477 \nYear: TE \nBranch: ECS",
                     style: TextStyle(
                       height: 1.5,
                       fontSize: 16,

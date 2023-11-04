@@ -14,13 +14,13 @@ Widget appsList(BuildContext context) {
         ),
         const SizedBox(height: 16),
         item(context, '4', 'Assignments Pending', '/app07'),
-        item(context, '5', 'October Timetable SEM V', '/app08'),
-        item(context, '6', 'Hall Ticket Generation', '/app09'),
-        item(context, '7', 'Railway Concession', '/app10'),
-        item(context, '8', 'Student Newsletter', '/app11'),
+        item(context, '5', 'Timetable SEM V', '/app08'),
+        // item(context, '6', 'Hall Ticket Generation', '/app09'),
+        item(context, '6', 'Railway Concession', '/app10'),
+        item(context, '7', 'Student Newsletter', '/app11'),
         // item(context, '9', 'My Profile with Drawer Navigation', '/app12'),
         // item(context, '10', 'My Profile with Bottom Navigation Bar', '/app13'),
-        item(context, '9', 'Official Notice Board', '/app14'),
+        item(context, '8', 'Official Notice Board', '/app14'),
       ]));
 }
 
