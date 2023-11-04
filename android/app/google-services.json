@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "960014127826",
+    "project_id": "crce-connex",
+    "storage_bucket": "crce-connex.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:960014127826:android:58d302ed9da749cf83530b",
+        "android_client_info": {
+          "package_name": "com.example.crce_connex"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-YoA-2Lg1uNLdVaoqqnuRfqHI4qUg490"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

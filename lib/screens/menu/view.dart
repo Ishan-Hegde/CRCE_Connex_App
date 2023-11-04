@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_apps/screens/menu/widgets/apps_carousel.dart';
+import 'package:crce_connex/screens/menu/widgets/apps_carousel.dart';
 import 'widgets/header.dart';
 import 'widgets/info.dart';
 import 'widgets/apps_list.dart';

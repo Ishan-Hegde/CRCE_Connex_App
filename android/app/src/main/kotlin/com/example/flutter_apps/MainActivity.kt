@@ -1,4 +1,4 @@
-package com.example.flutter_apps
+package com.example.crce_connex
 
 import io.flutter.embedding.android.FlutterActivity
 
