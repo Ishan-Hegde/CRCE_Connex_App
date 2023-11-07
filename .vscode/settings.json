@@ -1,4 +1,5 @@
 {
-    "cmake.sourceDirectory": "C:/Users/hegde/Desktop/app/connex/crce_connex-master/CRCE_Connex_App/linux",
-    "java.configuration.updateBuildConfiguration": "automatic"
+    "cmake.sourceDirectory": "C:/Users/hegde/Desktop/app/connex/flutter_apps-master/CRCE_Connex_App/linux",
+    "java.configuration.updateBuildConfiguration": "automatic",
+    "C_Cpp.errorSquiggles": "disabled"
 }

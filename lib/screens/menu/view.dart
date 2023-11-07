@@ -1,11 +1,29 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart'
+    show
+        BuildContext,
+        Column,
+        Container,
+        CrossAxisAlignment,
+        EdgeInsets,
+        Key,
+        ListView,
+        Scaffold,
+        SizedBox,
+        StatelessWidget,
+        Theme,
+        Widget;
 import 'package:crce_connex/screens/menu/widgets/apps_carousel.dart';
-import 'widgets/header.dart';
-import 'widgets/info.dart';
-import 'widgets/apps_list.dart';
+import 'package:crce_connex/screens/menu/widgets/header.dart';
+import 'package:crce_connex/screens/menu/widgets/info.dart';
+import 'package:crce_connex/screens/menu/widgets/apps_list.dart';
 
 class Apps extends StatelessWidget {
-  const Apps({super.key, Key? apps});
+  const Apps(
+      {super.key,
+      Key? apps,
+      required Scaffold home,
+      required routes,
+      required theme});
 
   @override
   Widget build(BuildContext context) {

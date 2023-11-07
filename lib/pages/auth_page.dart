@@ -30,5 +30,10 @@ Widget build(BuildContext context) {
   return const MaterialApp(
     debugShowCheckedModeBanner: false,
     home: AuthPage(),
+    // home: const Scaffold(body: SafeArea(child: Apps())),
+    // routes: Routes.getRoutes(),
+    // theme: Provider.of<ThemeProvider>(context).isDarkMode
+    //     ? AppTheme.getDarkTheme(context)
+    //     : AppTheme.getLightTheme(context),
   );
 }

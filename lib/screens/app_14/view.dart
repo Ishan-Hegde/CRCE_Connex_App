@@ -1,5 +1,17 @@
-import 'package:flutter/material.dart';
-
+import 'package:flutter/material.dart'
+    show
+        AppBar,
+        BuildContext,
+        DefaultTabController,
+        Icon,
+        Icons,
+        Key,
+        Scaffold,
+        StatelessWidget,
+        Tab,
+        TabBar,
+        TabBarView,
+        Widget;
 import '../profile_personal/view.dart';
 import '../profile_formation/view.dart';
 import '../profile_experience/view.dart';
