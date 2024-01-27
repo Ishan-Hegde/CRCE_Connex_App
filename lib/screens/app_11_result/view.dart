@@ -18,8 +18,8 @@ class App11Result extends StatefulWidget {
     required this.scholarship,
     required this.accountLimit,
     required this.isBrazilian,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   App11ResultUI createState() => App11ResultUI();

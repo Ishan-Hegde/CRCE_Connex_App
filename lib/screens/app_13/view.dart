@@ -5,7 +5,7 @@ import '../profile_formation/view.dart';
 import '../profile_experience/view.dart';
 
 class App13 extends StatefulWidget {
-  const App13({Key? key}) : super(key: key);
+  const App13({super.key});
 
   @override
   App13State createState() => App13State();
