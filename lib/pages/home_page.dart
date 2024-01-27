@@ -12,10 +12,10 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      routes: Routes.getRoutes(),
-      theme: Provider.of<ThemeProvider>(context).isDarkMode
-          ? AppTheme.getDarkTheme(context)
-          : AppTheme.getLightTheme(context),
+      // routes: Routes.getRoutes(),
+      // theme: Provider.of<ThemeProvider>(context).isDarkMode
+      //     ? AppTheme.getDarkTheme(context)
+      //     : AppTheme.getLightTheme(context),
     );
   }
 }
