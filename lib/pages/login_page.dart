@@ -29,8 +29,8 @@ class LoginPage extends StatelessWidget {
 
               // logo
               const Icon(
-                Icons.lock,
-                size: 100,
+                Icons.menu_book,
+                size: 110,
               ),
 
               const SizedBox(height: 50),
@@ -40,13 +40,13 @@ class LoginPage extends StatelessWidget {
                 'Welcome back you\'ve been missed!',
                 style: TextStyle(
                   color: Colors.grey[700],
-                  fontSize: 16,
+                  fontSize: 17,
                 ),
               ),
 
               const SizedBox(height: 25),
 
-              // email textfield
+              // email text-field
               MyTextField(
                 controller: emailController,
                 hintText: 'Email ID',
@@ -55,7 +55,7 @@ class LoginPage extends StatelessWidget {
 
               const SizedBox(height: 10),
 
-              // password textfield
+              // password text-field
               MyTextField(
                 controller: passwordController,
                 hintText: 'Password',

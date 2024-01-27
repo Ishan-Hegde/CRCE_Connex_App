@@ -1,8 +1,10 @@
-import 'package:crce_connex/providers/theme.dart';
-import 'package:crce_connex/routes.dart';
-import 'package:crce_connex/theme.dart';
+// import 'package:crce_connex/providers/theme.dart';
+// import 'package:crce_connex/routes.dart';
+// import 'package:crce_connex/theme.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+
+import '../routes.dart';
+// import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
