@@ -1,5 +1,3 @@
-// ignore_for_file: use_key_in_widget_constructors
-
 import 'package:flutter/material.dart';
 
 class TheSlider extends StatelessWidget {
@@ -14,7 +12,7 @@ class TheSlider extends StatelessWidget {
     required this.onChanged,
     required this.max,
     required this.label,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
