@@ -6,7 +6,7 @@ import '../../widgets/input.dart';
 import '../../widgets/dropdown.dart';
 
 class App09 extends StatefulWidget {
-  const App09({Key? key}) : super(key: key);
+  const App09({super.key});
 
   @override
   App09UI createState() => App09UI();

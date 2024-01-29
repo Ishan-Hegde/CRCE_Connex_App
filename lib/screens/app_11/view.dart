@@ -8,7 +8,7 @@ import '../../widgets/dropdown.dart';
 import '../../widgets/slider.dart';
 
 class App11 extends StatefulWidget {
-  const App11({Key? key}) : super(key: key);
+  const App11({super.key});
 
   @override
   App11UI createState() => App11UI();

@@ -5,7 +5,6 @@ import 'package:flutter/material.dart'
         DefaultTabController,
         Icon,
         Icons,
-        Key,
         Scaffold,
         StatelessWidget,
         Tab,
@@ -17,7 +16,7 @@ import '../profile_formation/view.dart';
 import '../profile_experience/view.dart';
 
 class App14 extends StatelessWidget {
-  const App14({Key? key}) : super(key: key);
+  const App14({super.key});
 
   @override
   Widget build(BuildContext context) {

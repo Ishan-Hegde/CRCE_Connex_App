@@ -12,6 +12,10 @@ class LoginPage extends StatelessWidget {
 
   // sign user in method
   void signUserIn() async {
+    //show loading circle
+    // showDialog(context: context, builder: builder)
+
+    // try sign in
     await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: emailController.text, password: passwordController.text);
   }

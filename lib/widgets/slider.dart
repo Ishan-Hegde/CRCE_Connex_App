@@ -7,12 +7,12 @@ class TheSlider extends StatelessWidget {
   final String label;
 
   const TheSlider({
-    Key? key,
+    super.key,
     required this.value,
     required this.onChanged,
     required this.max,
     required this.label,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
