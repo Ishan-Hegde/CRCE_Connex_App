@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:crce_connex/components/my_button.dart';
 import 'package:crce_connex/components/my_textfield.dart';
