@@ -8,9 +8,8 @@ import 'package:provider/provider.dart';
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
-
   //sign user out method
-  void signUserOut(){
+  void signUserOut() {
     FirebaseAuth.instance.signOut();
   }
 
@@ -30,11 +29,10 @@ class HomePage extends StatelessWidget {
   }
 }
 
-
 // // This widget is the root of your application.
 //   @override
 //   Widget build(BuildContext context) {
-//     return const MaterialApp(
+//     return MaterialApp(
 //       debugShowCheckedModeBanner: false,
 //       routes: Routes.getRoutes(),
 //       theme: Provider.of<ThemeProvider>(context).isDarkMode
@@ -42,3 +40,4 @@ class HomePage extends StatelessWidget {
 //           : AppTheme.getLightTheme(context),
 //     );
 //   }
+// }
