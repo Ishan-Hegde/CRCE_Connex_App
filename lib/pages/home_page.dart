@@ -5,9 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 // import 'package:provider/provider.dart';
 import 'dart:io';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -16,6 +14,8 @@ final kFirstDay = DateTime(2000, 1, 1);
 final kLastDay = DateTime(2050, 12, 31);
 
 class AssignmentsPage extends StatelessWidget {
+  const AssignmentsPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,8 +46,8 @@ class SubjectCard extends StatefulWidget {
   const SubjectCard({
     required this.subjectName,
     required this.onTap,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   _SubjectCardState createState() => _SubjectCardState();
@@ -73,12 +73,12 @@ class _SubjectCardState extends State<SubjectCard> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Colors.blue,
                   shape: BoxShape.circle,
                 ),
                 padding: const EdgeInsets.all(16.0),
-                child: Icon(
+                child: const Icon(
                   Icons.book,
                   size: 48.0,
                   color: Colors.white,
@@ -87,7 +87,7 @@ class _SubjectCardState extends State<SubjectCard> {
               const SizedBox(height: 8.0),
               Text(
                 widget.subjectName,
-                style: TextStyle(fontSize: 16.0),
+                style: const TextStyle(fontSize: 16.0),
               ),
             ],
           ),
@@ -98,6 +98,8 @@ class _SubjectCardState extends State<SubjectCard> {
 }
 
 class ProfileTab extends StatefulWidget {
+  const ProfileTab({super.key});
+
   @override
   _ProfileTabState createState() => _ProfileTabState();
 }
@@ -105,7 +107,7 @@ class ProfileTab extends StatefulWidget {
 class _ProfileTabState extends State<ProfileTab> {
   User? user = FirebaseAuth.instance.currentUser;
   File? _image;
-  TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
 
   @override
   void initState() {
@@ -115,7 +117,7 @@ class _ProfileTabState extends State<ProfileTab> {
 
   Future<void> _pickImage() async {
     final picker = ImagePicker();
-    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
     setState(() {
       if (pickedFile != null) {
@@ -140,16 +142,16 @@ class _ProfileTabState extends State<ProfileTab> {
           const SizedBox(height: 16.0),
           Text(
             'Email: ${user?.email ?? ''}',
-            style: TextStyle(fontSize: 16.0, color: Colors.blue),
+            style: const TextStyle(fontSize: 16.0, color: Colors.blue),
           ),
           const SizedBox(height: 8.0),
-          Text(
+          const Text(
             'Username:',
             style: TextStyle(fontSize: 16.0, color: Colors.blue),
           ),
           TextField(
             controller: _usernameController,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               hintText: 'Enter your username',
               contentPadding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
               enabledBorder: OutlineInputBorder(
@@ -163,7 +165,7 @@ class _ProfileTabState extends State<ProfileTab> {
           const SizedBox(height: 16.0),
           ElevatedButton(
             onPressed: _pickImage,
-            child: Text('Upload Profile Picture'),
+            child: const Text('Upload Profile Picture'),
           ),
         ],
       ),
@@ -172,7 +174,7 @@ class _ProfileTabState extends State<ProfileTab> {
 }
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -191,21 +193,21 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     FirebaseAuth.instance.signOut();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        actions: [
-          IconButton(
-              onPressed: signUserOut,
-              icon: const Icon(Icons.logout)
-          )
-        ],
-      ),
-      body: const Center(child: Text("LOGGED IN!")),
-    );
-  }
-}
+  // @override
+  // Widget build(BuildContext context) {
+  //   return Scaffold(
+  //     appBar: AppBar(
+  //       actions: [
+  //         IconButton(
+  //             onPressed: signUserOut,
+  //             icon: const Icon(Icons.logout)
+  //         )
+  //       ],
+  //     ),
+  //     body: const Center(child: Text("LOGGED IN!")),
+  //   );
+  // }
+
 
 // // This widget is the root of your application.
 //   @override
@@ -232,7 +234,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         ],
         bottom: TabBar(
           controller: _tabController,
-          tabs: [
+          tabs: const [
             Tab(text: 'Assignments'),
             Tab(text: 'Calendar'),
             Tab(text: 'Profile'),
@@ -254,21 +256,21 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         child: ListView(
           children: [
             ListTile(
-              title: Text('Assignments'),
+              title: const Text('Assignments'),
               onTap: () {
                 Navigator.pop(context); // Close the drawer
                 _tabController.animateTo(0); // Switch to Assignments tab
               },
             ),
             ListTile(
-              title: Text('Calendar'),
+              title: const Text('Calendar'),
               onTap: () {
                 Navigator.pop(context); // Close the drawer
                 _tabController.animateTo(1); // Switch to Calendar tab
               },
             ),
             ListTile(
-              title: Text('Profile'),
+              title: const Text('Profile'),
               onTap: () {
                 Navigator.pop(context); // Close the drawer
                 _tabController.animateTo(2); // Switch to Profile tab
@@ -279,7 +281,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       ),
       body: TabBarView(
         controller: _tabController,
-        children: [
+        children: const [
           AssignmentsPage(),
           TableBasicsExample(),
           ProfileTab(),
@@ -290,7 +292,10 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   }
 }
 
+
 class TableBasicsExample extends StatefulWidget {
+  const TableBasicsExample({super.key});
+
   @override
   _TableBasicsExampleState createState() => _TableBasicsExampleState();
 }
@@ -337,23 +342,23 @@ class _TableBasicsExampleState extends State<TableBasicsExample> {
             _focusedDay = focusedDay;
           },
           headerStyle: HeaderStyle(
-            titleTextStyle: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white),
+            titleTextStyle: const TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white),
             formatButtonDecoration: BoxDecoration(
               color: Colors.blue,
               borderRadius: BorderRadius.circular(20.0),
             ),
-            formatButtonTextStyle: TextStyle(color: Colors.white),
+            formatButtonTextStyle: const TextStyle(color: Colors.white),
           ),
           calendarStyle: CalendarStyle(
             todayDecoration: BoxDecoration(
               color: Colors.blue.withOpacity(0.3),
               shape: BoxShape.circle,
             ),
-            selectedDecoration: BoxDecoration(
+            selectedDecoration: const BoxDecoration(
               color: Colors.blue,
               shape: BoxShape.circle,
             ),
-            selectedTextStyle: TextStyle(color: Colors.white),
+            selectedTextStyle: const TextStyle(color: Colors.white),
           ),
         ),
       ),
@@ -368,13 +373,14 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  // ignore: use_key_in_widget_constructors
   const MyApp({Key? key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const HomePage(),
+      home: HomePage(),
     );
   }
 }
