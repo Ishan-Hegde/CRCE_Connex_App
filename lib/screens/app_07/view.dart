@@ -1,9 +1,10 @@
-import 'package:intl/intl.dart';
+// ignore_for_file: use_key_in_widget_constructors, avoid_print
+
 import 'package:flutter/material.dart';
 import '../../widgets/header.dart';
 
 class App07 extends StatefulWidget {
-  const App07({super.key});
+  const App07({Key? key});
 
   @override
   App07UI createState() => App07UI();
@@ -13,13 +14,13 @@ class Item {
   String src;
   String title;
   String description;
-  double price;
+  int progress;
 
   Item({
     required this.src,
     required this.title,
     required this.description,
-    required this.price,
+    required this.progress,
   });
 }
 
@@ -28,125 +29,152 @@ class App07UI extends State<App07> {
   Widget build(BuildContext context) {
     Map<String, dynamic>? args =
         ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+
     String title = args?['title'] ?? 'Assignments';
 
     final List<Item> items = [
       Item(
-        src:
-            'https://media.licdn.com/dms/image/C4E0BAQFfYevcaYPy6A/company-logo_200_200/0/1630612004940/fr_conceicao_rodrigues_college_of_engineering_logo?e=1706745600&v=beta&t=-z6t3X2S2PVwnpmIjAh7JZdvTNR46c9jAQJDNmBWRas',
-        title: 'SE Assign 2',
+        src: 'https://placekitten.com/200/300',
+        title: 'Assignment 1',
         description: 'Pending',
-        price: 0,
+        progress: 50,
       ),
       Item(
-        src:
-            'https://media.licdn.com/dms/image/C4E0BAQFfYevcaYPy6A/company-logo_200_200/0/1630612004940/fr_conceicao_rodrigues_college_of_engineering_logo?e=1706745600&v=beta&t=-z6t3X2S2PVwnpmIjAh7JZdvTNR46c9jAQJDNmBWRas',
-        title: 'CE Assign 2',
+        src: 'https://placekitten.com/201/301',
+        title: 'Assignment 2',
         description: 'Pending',
-        price: 0,
+        progress: 12,
       ),
       Item(
-        src:
-            'https://media.licdn.com/dms/image/C4E0BAQFfYevcaYPy6A/company-logo_200_200/0/1630612004940/fr_conceicao_rodrigues_college_of_engineering_logo?e=1706745600&v=beta&t=-z6t3X2S2PVwnpmIjAh7JZdvTNR46c9jAQJDNmBWRas',
-        title: 'WT Assign',
+        src: 'https://placekitten.com/202/302',
+        title: 'Assignment 3',
         description: 'Completed',
-        price: 0,
+        progress: 100,
       ),
       Item(
-        src:
-            'https://media.licdn.com/dms/image/C4E0BAQFfYevcaYPy6A/company-logo_200_200/0/1630612004940/fr_conceicao_rodrigues_college_of_engineering_logo?e=1706745600&v=beta&t=-z6t3X2S2PVwnpmIjAh7JZdvTNR46c9jAQJDNmBWRas',
-        title: 'PCE Skit',
+        src: 'https://placekitten.com/203/303',
+        title: 'Assignment 4',
         description: 'Pending',
-        price: 0,
+        progress: 25,
       ),
     ];
 
     return Scaffold(
       body: SafeArea(
-          child: Column(
-        children: [
-          header(context, title),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: Row(
-                children: items.asMap().entries.map((entry) {
-                  final index = entry.key;
-                  final item = entry.value;
+        child: Column(
+          children: [
+            header(context, title),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Row(
+                  children: items.asMap().entries.map((entry) {
+                    final index = entry.key;
+                    final item = entry.value;
 
-                  return Padding(
-                    padding: EdgeInsets.only(
-                        right: index != items.length - 1 ? 8 : 0),
-                    child: buildItem(context, item.src, item.title,
-                        item.description, item.price),
-                  );
-                }).toList(),
+                    return Padding(
+                      padding: EdgeInsets.only(
+                          right: index != items.length - 1 ? 16 : 0),
+                      child: buildItem(context, item),
+                    );
+                  }).toList(),
+                ),
               ),
             ),
-          )
-        ],
-      )),
+          ],
+        ),
+      ),
     );
   }
-}
 
-Widget buildItem(BuildContext context, String src, String title,
-    String description, double price) {
-  void onAddToCart() {}
-
-  return Container(
-      width: 180,
+  Widget buildItem(BuildContext context, Item item) {
+    return Container(
+      width: 200,
+      height: 300,
+      // Adjusted the height
+      margin: const EdgeInsets.only(bottom: 430),
+      // Added margin to the top
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          color: Theme.of(context).colorScheme.surface),
+        borderRadius: BorderRadius.circular(16),
+        color: Theme.of(context).cardColor,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.2),
+            spreadRadius: 2,
+            blurRadius: 5,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ClipRRect(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(12),
             child: SizedBox(
               width: double.infinity,
+              height: 120,
               child: Image.network(
-                src,
+                item.src,
                 fit: BoxFit.cover,
               ),
             ),
           ),
           const SizedBox(height: 12),
           Text(
-            title,
+            item.title,
             overflow: TextOverflow.ellipsis,
             maxLines: 1,
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 16,
-              color: Theme.of(context).colorScheme.onBackground,
+              color: Theme.of(context).textTheme.bodyLarge!.color,
             ),
           ),
           const SizedBox(height: 4),
           Text(
-            description,
+            item.description,
             style: TextStyle(
               fontSize: 14,
-              color: Theme.of(context).colorScheme.onSurface,
+              color: Theme.of(context).textTheme.bodyMedium!.color,
             ),
           ),
           const SizedBox(height: 12),
-          Text(
-            NumberFormat.currency(symbol: '\$', decimalDigits: 2).format(price),
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
-              color: Theme.of(context).colorScheme.primary,
-            ),
+          Row(
+            children: [
+              Text(
+                '${item.progress}%',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                  color: Theme.of(context).primaryColor,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: LinearProgressIndicator(
+                  value: item.progress / 100,
+                  backgroundColor:
+                      Theme.of(context).primaryColor.withOpacity(0.3),
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    Theme.of(context).primaryColor,
+                  ),
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: 8),
           ElevatedButton(
-            onPressed: onAddToCart,
+            onPressed: () {
+              // Your custom action when the button is pressed
+              print('Mark as Done button pressed for ${item.title}');
+            },
             child: const Text('Mark as Done'),
-          )
+          ),
         ],
-      ));
+      ),
+    );
+  }
 }

@@ -1,20 +1,27 @@
-// import 'package:crce_connex/routes.dart';
-// import 'package:crce_connex/theme.dart';
-// import 'package:crce_connex/providers/theme.dart';
+// ignore_for_file: use_key_in_widget_constructors, avoid_print, avoid_print, duplicate_ignore, library_private_types_in_public_api
+
+import 'package:crce_connex/screens/app_07/view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-// import 'package:provider/provider.dart';
 import 'dart:io';
-// import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:image_picker/image_picker.dart';
 
+class FeedbackForm {
+  String subject;
+  String feedback;
+
+  FeedbackForm({
+    required this.subject,
+    required this.feedback,
+  });
+}
 
 final kFirstDay = DateTime(2000, 1, 1);
 final kLastDay = DateTime(2050, 12, 31);
 
 class AssignmentsPage extends StatelessWidget {
-  const AssignmentsPage({super.key});
+  const AssignmentsPage({Key? key});
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +39,7 @@ class AssignmentsPage extends StatelessWidget {
             onTap: () {
               print('Subject $index tapped!');
             },
+            page: const App07(),
           );
         },
       ),
@@ -41,12 +49,13 @@ class AssignmentsPage extends StatelessWidget {
 
 class SubjectCard extends StatefulWidget {
   final String subjectName;
-  final VoidCallback onTap;
+  final Widget page;
 
   const SubjectCard({
     required this.subjectName,
-    required this.onTap,
+    required this.page,
     super.key,
+    required Null Function() onTap,
   });
 
   @override
@@ -59,38 +68,43 @@ class _SubjectCardState extends State<SubjectCard> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: widget.onTap,
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => widget.page),
+        );
+      },
       onHover: (hovered) {
         setState(() {
           isHovered = hovered;
         });
       },
-      child: Material(
+      child: Card(
         elevation: isHovered ? 8.0 : 4.0,
-        borderRadius: BorderRadius.circular(16.0),
-        child: InkResponse(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                decoration: const BoxDecoration(
-                  color: Colors.blue,
-                  shape: BoxShape.circle,
-                ),
-                padding: const EdgeInsets.all(16.0),
-                child: const Icon(
-                  Icons.book,
-                  size: 48.0,
-                  color: Colors.white,
-                ),
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(18.0)),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              decoration: const BoxDecoration(
+                color: Colors.blue,
+                shape: BoxShape.circle,
               ),
-              const SizedBox(height: 8.0),
-              Text(
-                widget.subjectName,
-                style: const TextStyle(fontSize: 16.0),
+              padding: const EdgeInsets.all(18.0),
+              child: const Icon(
+                Icons.book,
+                size: 48.0,
+                color: Colors.white,
               ),
-            ],
-          ),
+            ),
+            const SizedBox(height: 8.0),
+            Text(
+              widget.subjectName,
+              style:
+                  const TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+            ),
+          ],
         ),
       ),
     );
@@ -98,7 +112,7 @@ class _SubjectCardState extends State<SubjectCard> {
 }
 
 class ProfileTab extends StatefulWidget {
-  const ProfileTab({super.key});
+  const ProfileTab({Key? key});
 
   @override
   _ProfileTabState createState() => _ProfileTabState();
@@ -135,9 +149,14 @@ class _ProfileTabState extends State<ProfileTab> {
         children: [
           CircleAvatar(
             radius: 50.0,
-            backgroundImage: _image != null
-                ? FileImage(_image!) as ImageProvider<Object>?
-                : NetworkImage(user?.photoURL ?? '') as ImageProvider<Object>?,
+            backgroundColor: Colors.blue,
+            child: CircleAvatar(
+              radius: 48.0,
+              backgroundImage: _image != null
+                  ? FileImage(_image!)
+                  : NetworkImage(user?.photoURL ?? '')
+                      as ImageProvider<Object>?,
+            ),
           ),
           const SizedBox(height: 16.0),
           Text(
@@ -153,18 +172,24 @@ class _ProfileTabState extends State<ProfileTab> {
             controller: _usernameController,
             decoration: const InputDecoration(
               hintText: 'Enter your username',
-              contentPadding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+              contentPadding:
+                  EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
               enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: Colors.blue, width: 1.0),
+                borderRadius: BorderRadius.all(Radius.circular(8.0)),
               ),
               focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: Colors.blue, width: 1.0),
+                borderRadius: BorderRadius.all(Radius.circular(8.0)),
               ),
             ),
           ),
           const SizedBox(height: 16.0),
           ElevatedButton(
             onPressed: _pickImage,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.blue,
+            ),
             child: const Text('Upload Profile Picture'),
           ),
         ],
@@ -174,58 +199,40 @@ class _ProfileTabState extends State<ProfileTab> {
 }
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  const HomePage({Key? key});
 
   @override
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
+class _HomePageState extends State<HomePage>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  late User? user; // Define user here
+
+  // Feedback variables
+  final GlobalKey<FormState> _feedbackFormKey = GlobalKey<FormState>();
+  final TextEditingController _feedbackSubjectController =
+      TextEditingController();
+  final TextEditingController _feedbackController = TextEditingController();
+  final List<FeedbackForm> _feedbackList = [];
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 4, vsync: this);
+    user = FirebaseAuth.instance.currentUser;
   }
 
   void signUserOut() {
     FirebaseAuth.instance.signOut();
   }
 
-  // @override
-  // Widget build(BuildContext context) {
-  //   return Scaffold(
-  //     appBar: AppBar(
-  //       actions: [
-  //         IconButton(
-  //             onPressed: signUserOut,
-  //             icon: const Icon(Icons.logout)
-  //         )
-  //       ],
-  //     ),
-  //     body: const Center(child: Text("LOGGED IN!")),
-  //   );
-  // }
-
-
-// // This widget is the root of your application.
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       debugShowCheckedModeBanner: false,
-//       routes: Routes.getRoutes(),
-//       theme: Provider.of<ThemeProvider>(context).isDarkMode
-//           ? AppTheme.getDarkTheme(context)
-//           : AppTheme.getLightTheme(context),
-//     );
-//   }
-// }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: const Text('CRCE Connex'),
         actions: [
           IconButton(
             onPressed: signUserOut,
@@ -238,6 +245,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
             Tab(text: 'Assignments'),
             Tab(text: 'Calendar'),
             Tab(text: 'Profile'),
+            Tab(text: 'Feedback'),
           ],
         ),
         leading: Builder(
@@ -253,48 +261,88 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         backgroundColor: Colors.blue,
       ),
       drawer: Drawer(
-        child: ListView(
+        child: Column(
           children: [
             ListTile(
+              leading: const Icon(Icons.assignment),
               title: const Text('Assignments'),
               onTap: () {
-                Navigator.pop(context); // Close the drawer
-                _tabController.animateTo(0); // Switch to Assignments tab
+                Navigator.pop(context);
+                _tabController.animateTo(0);
               },
             ),
             ListTile(
+              leading: const Icon(Icons.calendar_today),
               title: const Text('Calendar'),
               onTap: () {
-                Navigator.pop(context); // Close the drawer
-                _tabController.animateTo(1); // Switch to Calendar tab
+                Navigator.pop(context);
+                _tabController.animateTo(1);
               },
             ),
             ListTile(
+              leading: const Icon(Icons.person),
               title: const Text('Profile'),
               onTap: () {
-                Navigator.pop(context); // Close the drawer
-                _tabController.animateTo(2); // Switch to Profile tab
+                Navigator.pop(context);
+                _tabController.animateTo(2);
               },
+            ),
+            ListTile(
+              leading: const Icon(Icons.feedback),
+              title: const Text('Feedback'),
+              onTap: () {
+                Navigator.pop(context);
+                _tabController.animateTo(3);
+              },
+            ),
+            const Divider(),
+            ListTile(
+              title: Text('Welcome, ${user?.displayName ?? ''}!'),
             ),
           ],
         ),
       ),
       body: TabBarView(
         controller: _tabController,
-        children: const [
-          AssignmentsPage(),
-          TableBasicsExample(),
-          ProfileTab(),
+        children: [
+          const AssignmentsPage(),
+          const TableBasicsExample(),
+          const ProfileTab(),
+          FeedbackPage(
+            formKey: _feedbackFormKey,
+            subjectController: _feedbackSubjectController,
+            feedbackController: _feedbackController,
+            feedbackList: _feedbackList,
+            submitFeedback: submitFeedback,
+          ),
         ],
       ),
       backgroundColor: Colors.grey[900],
     );
   }
+
+  // Feedback methods
+  void submitFeedback() {
+    if (_feedbackFormKey.currentState?.validate() ?? false) {
+      FeedbackForm newFeedback = FeedbackForm(
+        subject: _feedbackSubjectController.text,
+        feedback: _feedbackController.text,
+      );
+
+      setState(() {
+        _feedbackList.add(newFeedback);
+      });
+
+      // Clear the form fields
+      _feedbackFormKey.currentState?.reset();
+      _feedbackSubjectController.clear();
+      _feedbackController.clear();
+    }
+  }
 }
 
-
 class TableBasicsExample extends StatefulWidget {
-  const TableBasicsExample({super.key});
+  const TableBasicsExample({Key? key});
 
   @override
   _TableBasicsExampleState createState() => _TableBasicsExampleState();
@@ -342,7 +390,10 @@ class _TableBasicsExampleState extends State<TableBasicsExample> {
             _focusedDay = focusedDay;
           },
           headerStyle: HeaderStyle(
-            titleTextStyle: const TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white),
+            titleTextStyle: const TextStyle(
+                fontSize: 20.0,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
             formatButtonDecoration: BoxDecoration(
               color: Colors.blue,
               borderRadius: BorderRadius.circular(20.0),
@@ -366,6 +417,86 @@ class _TableBasicsExampleState extends State<TableBasicsExample> {
   }
 }
 
+class FeedbackPage extends StatelessWidget {
+  final GlobalKey<FormState> formKey;
+  final TextEditingController subjectController;
+  final TextEditingController feedbackController;
+  final List<FeedbackForm> feedbackList;
+  final VoidCallback submitFeedback;
+
+  const FeedbackPage({
+    required this.formKey,
+    required this.subjectController,
+    required this.feedbackController,
+    required this.feedbackList,
+    required this.submitFeedback,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Feedback System'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          key: formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              TextFormField(
+                controller: subjectController,
+                decoration: const InputDecoration(labelText: 'Subject'),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter a subject';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 16.0),
+              TextFormField(
+                controller: feedbackController,
+                maxLines: 4,
+                decoration: const InputDecoration(labelText: 'Feedback'),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your feedback';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 16.0),
+              ElevatedButton(
+                onPressed: submitFeedback,
+                child: const Text('Submit Feedback'),
+              ),
+              const SizedBox(height: 16.0),
+              const Text(
+                'Recent Feedback:',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8.0),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: feedbackList.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text(feedbackList[index].subject),
+                      subtitle: Text(feedbackList[index].feedback),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 void main() {
   runApp(
     const MyApp(),
@@ -373,15 +504,15 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  // ignore: use_key_in_widget_constructors
   const MyApp({Key? key});
 
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: HomePage(),
+      home: Scaffold(
+        body: HomePage(),
+      ),
     );
   }
 }
-
