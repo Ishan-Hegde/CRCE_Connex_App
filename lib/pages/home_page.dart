@@ -39,7 +39,7 @@ class AssignmentsPage extends StatelessWidget {
             onTap: () {
               print('Subject $index tapped!');
             },
-            page: const App07(),
+            page: const CatAssignment(),
           );
         },
       ),
@@ -184,7 +184,7 @@ class _ProfileTabState extends State<ProfileTab> {
               ),
             ),
           ),
-          const SizedBox(height: 16.0),
+          const SizedBox(height: 16),
           ElevatedButton(
             onPressed: _pickImage,
             style: ElevatedButton.styleFrom(

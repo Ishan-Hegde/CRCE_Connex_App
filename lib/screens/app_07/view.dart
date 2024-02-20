@@ -3,11 +3,11 @@
 import 'package:flutter/material.dart';
 import '../../widgets/header.dart';
 
-class App07 extends StatefulWidget {
-  const App07({Key? key});
+class CatAssignment extends StatefulWidget {
+  const CatAssignment({Key? key});
 
   @override
-  App07UI createState() => App07UI();
+  CatAssignmentUI createState() => CatAssignmentUI();
 }
 
 class Item {
@@ -24,7 +24,7 @@ class Item {
   });
 }
 
-class App07UI extends State<App07> {
+class CatAssignmentUI extends State<CatAssignment> {
   @override
   Widget build(BuildContext context) {
     Map<String, dynamic>? args =
@@ -75,7 +75,7 @@ class App07UI extends State<App07> {
 
                     return Padding(
                       padding: EdgeInsets.only(
-                          right: index != items.length - 1 ? 16 : 0),
+                          right: index != items.length - 1 ? 20 : 0),
                       child: buildItem(context, item),
                     );
                   }).toList(),
@@ -90,10 +90,10 @@ class App07UI extends State<App07> {
 
   Widget buildItem(BuildContext context, Item item) {
     return Container(
-      width: 200,
-      height: 300,
+      width: 175,
+      height: 285,
       // Adjusted the height
-      margin: const EdgeInsets.only(bottom: 430),
+      margin: const EdgeInsets.only(bottom: 10),
       // Added margin to the top
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(

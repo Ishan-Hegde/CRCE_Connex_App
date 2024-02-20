@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:crce_connex/components/my_button.dart';
 import 'package:crce_connex/components/my_textfield.dart';
@@ -6,7 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 enum UserRole { student, teacher }
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  const LoginPage({super.key});
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -17,6 +19,7 @@ class _LoginPageState extends State<LoginPage> {
   final passwordController = TextEditingController();
   late bool isTeacherLogin;
   late UserRole selectedRole;
+  bool showErrorMessage = false;
 
   @override
   void initState() {
@@ -26,11 +29,6 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void signUserIn() async {
-    if (emailController.text.isEmpty || passwordController.text.isEmpty) {
-      showEmptyFieldsAlert();
-      return;
-    }
-
     showDialog(
       context: context,
       builder: (context) {
@@ -50,28 +48,36 @@ class _LoginPageState extends State<LoginPage> {
           password: passwordController.text,
         );
 
-        Navigator.pop(context);
+        setState(() {
+          showErrorMessage = false; // Reset error message visibility
+        });
+
+        // Dismiss the progress dialog after a slight delay
+        Future.delayed(const Duration(milliseconds: 100), () {
+          Navigator.pop(context);
+        });
       } else {
         // Show error message if user's role does not match selected role
         Navigator.pop(context);
         showRoleMismatchAlert();
       }
-    } on FirebaseAuthException catch (e) {
+    } on FirebaseAuthException {
       Navigator.pop(context);
 
-      if (e.code == 'user-not-found') {
-        wrongEmailMessage();
-      } else if (e.code == 'wrong-password') {
-        wrongPasswordMessage();
-      }
+      setState(() {
+        showErrorMessage =
+            true; // Set error message for any authentication error
+      });
+    } catch (e) {
+      Navigator.pop(context);
+
+      setState(() {
+        showErrorMessage = true; // Set error message for any other error
+      });
     }
   }
 
   Future<UserRole> getUserRole(String email) async {
-    // Implement your logic to retrieve user role from database based on email
-    // This is a placeholder function, you should replace it with actual logic
-    // For example, querying a Firestore database
-    // You might need to adjust this based on your database structure
     return UserRole.student; // Placeholder return value
   }
 
@@ -95,62 +101,38 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void wrongEmailMessage() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text("Incorrect Email"),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void wrongPasswordMessage() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text("Incorrect Password"),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   void showRoleMismatchAlert() {
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text("Role Mismatch"),
-          content: Text("You are not authorized to log in as a ${selectedRole.toString().split('.').last}."),
+          title: const Text("Role Mismatch"),
+          content: Text(
+              "You are not authorized to log in as a ${selectedRole.toString().split('.').last}."),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: Text('OK'),
+              child: const Text('OK'),
             ),
           ],
         );
       },
     );
+  }
+
+  void _validateAndSignUserIn() {
+    if (emailController.text.isEmpty || passwordController.text.isEmpty) {
+      setState(() {
+        showErrorMessage = true; // Show error message for empty fields
+      });
+    } else {
+      setState(() {
+        showErrorMessage = false; // Reset error message visibility
+      });
+      signUserIn(); // Proceed with sign-in attempt
+    }
   }
 
   @override
@@ -163,7 +145,7 @@ class _LoginPageState extends State<LoginPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const SizedBox(height: 100),
+                const SizedBox(height: 90),
                 const Icon(
                   Icons.menu_book,
                   size: 110,
@@ -176,6 +158,15 @@ class _LoginPageState extends State<LoginPage> {
                     fontSize: 17,
                   ),
                 ),
+                const SizedBox(height: 20),
+                if (showErrorMessage)
+                  const Text(
+                    'Incorrect email or password',
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontSize: 14,
+                    ),
+                  ),
                 const SizedBox(height: 25),
                 MyTextField(
                   controller: emailController,
@@ -198,7 +189,9 @@ class _LoginPageState extends State<LoginPage> {
                         onTap: forgotPasswordAlert,
                         child: Text(
                           'Forgot Password?',
-                          style: TextStyle(color: Colors.grey[600],decoration: TextDecoration.underline),
+                          style: TextStyle(
+                              color: Colors.grey[600],
+                              decoration: TextDecoration.underline),
                         ),
                       ),
                     ],
@@ -214,7 +207,8 @@ class _LoginPageState extends State<LoginPage> {
                           selectedRole = UserRole.student;
                         });
                       },
-                      child: _buildLoginTypeButton('Student', selectedRole == UserRole.student),
+                      child: _buildLoginTypeButton(
+                          'Student', selectedRole == UserRole.student),
                     ),
                     const SizedBox(width: 20),
                     GestureDetector(
@@ -223,13 +217,14 @@ class _LoginPageState extends State<LoginPage> {
                           selectedRole = UserRole.teacher;
                         });
                       },
-                      child: _buildLoginTypeButton('Teacher', selectedRole == UserRole.teacher),
+                      child: _buildLoginTypeButton(
+                          'Teacher', selectedRole == UserRole.teacher),
                     ),
                   ],
                 ),
                 const SizedBox(height: 45),
                 MyButton(
-                  onTap: signUserIn,
+                  onTap: _validateAndSignUserIn,
                 ),
               ],
             ),
