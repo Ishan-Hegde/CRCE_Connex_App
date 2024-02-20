@@ -1,26 +1,36 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:crce_connex/components/my_button.dart';
 import 'package:crce_connex/components/my_textfield.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+enum UserRole { student, teacher }
+
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  const LoginPage({Key? key}) : super(key: key);
 
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
-  // text editing controllers
   final emailController = TextEditingController();
-
   final passwordController = TextEditingController();
+  late bool isTeacherLogin;
+  late UserRole selectedRole;
 
-  // sign user in method
+  @override
+  void initState() {
+    super.initState();
+    isTeacherLogin = false;
+    selectedRole = UserRole.student; // Default to student role
+  }
+
   void signUserIn() async {
-    //show loading circle
+    if (emailController.text.isEmpty || passwordController.text.isEmpty) {
+      showEmptyFieldsAlert();
+      return;
+    }
+
     showDialog(
       context: context,
       builder: (context) {
@@ -30,35 +40,75 @@ class _LoginPageState extends State<LoginPage> {
       },
     );
 
-    // try sign in
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: emailController.text, password: passwordController.text);
+      // Assuming you have a database where user roles are stored
+      UserRole userRole = await getUserRole(emailController.text);
 
-      //pop the loading circle
-      Navigator.pop(context);
+      if (userRole == selectedRole) {
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: emailController.text,
+          password: passwordController.text,
+        );
+
+        Navigator.pop(context);
+      } else {
+        // Show error message if user's role does not match selected role
+        Navigator.pop(context);
+        showRoleMismatchAlert();
+      }
     } on FirebaseAuthException catch (e) {
-      //pop the loading circle
       Navigator.pop(context);
 
-      // WRONG EMAIL
       if (e.code == 'user-not-found') {
         wrongEmailMessage();
-      }
-
-      // WRONG PASSWORD
-      else if (e.code == 'wrong-password') {
+      } else if (e.code == 'wrong-password') {
         wrongPasswordMessage();
       }
     }
+  }
+
+  Future<UserRole> getUserRole(String email) async {
+    // Implement your logic to retrieve user role from database based on email
+    // This is a placeholder function, you should replace it with actual logic
+    // For example, querying a Firestore database
+    // You might need to adjust this based on your database structure
+    return UserRole.student; // Placeholder return value
+  }
+
+  void showEmptyFieldsAlert() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Empty Fields'),
+          content: const Text('Please fill in both email and password fields.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void wrongEmailMessage() {
     showDialog(
       context: context,
       builder: (context) {
-        return const AlertDialog(
-          title: Text("Incorrect Email"),
+        return AlertDialog(
+          title: const Text("Incorrect Email"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('OK'),
+            ),
+          ],
         );
       },
     );
@@ -68,8 +118,36 @@ class _LoginPageState extends State<LoginPage> {
     showDialog(
       context: context,
       builder: (context) {
-        return const AlertDialog(
-          title: Text("Incorrect Password"),
+        return AlertDialog(
+          title: const Text("Incorrect Password"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void showRoleMismatchAlert() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Role Mismatch"),
+          content: Text("You are not authorized to log in as a ${selectedRole.toString().split('.').last}."),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('OK'),
+            ),
+          ],
         );
       },
     );
@@ -80,73 +158,123 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       backgroundColor: Colors.grey[300],
       body: SafeArea(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const SizedBox(height: 50),
-
-              // logo
-              const Icon(
-                Icons.menu_book,
-                size: 110,
-              ),
-
-              const SizedBox(height: 50),
-
-              // welcome back, you've been missed!
-              Text(
-                'Welcome back you\'ve been missed!',
-                style: TextStyle(
-                  color: Colors.grey[700],
-                  fontSize: 17,
+        child: SingleChildScrollView(
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(height: 100),
+                const Icon(
+                  Icons.menu_book,
+                  size: 110,
                 ),
-              ),
-
-              const SizedBox(height: 25),
-
-              // email text-field
-              MyTextField(
-                controller: emailController,
-                hintText: 'Email ID',
-                obscureText: false,
-              ),
-
-              const SizedBox(height: 10),
-
-              // password text-field
-              MyTextField(
-                controller: passwordController,
-                hintText: 'Password',
-                obscureText: true,
-              ),
-
-              const SizedBox(height: 10),
-
-              // forgot password?
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+                const SizedBox(height: 50),
+                Text(
+                  'Welcome back you\'ve been missed!',
+                  style: TextStyle(
+                    color: Colors.grey[700],
+                    fontSize: 17,
+                  ),
+                ),
+                const SizedBox(height: 25),
+                MyTextField(
+                  controller: emailController,
+                  hintText: 'Email ID',
+                  obscureText: false,
+                ),
+                const SizedBox(height: 10),
+                MyTextField(
+                  controller: passwordController,
+                  hintText: 'Password',
+                  obscureText: true,
+                ),
+                const SizedBox(height: 10),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      GestureDetector(
+                        onTap: forgotPasswordAlert,
+                        child: Text(
+                          'Forgot Password?',
+                          style: TextStyle(color: Colors.grey[600],decoration: TextDecoration.underline),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 25),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      'Forgot Password?',
-                      style: TextStyle(color: Colors.grey[600]),
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          selectedRole = UserRole.student;
+                        });
+                      },
+                      child: _buildLoginTypeButton('Student', selectedRole == UserRole.student),
+                    ),
+                    const SizedBox(width: 20),
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          selectedRole = UserRole.teacher;
+                        });
+                      },
+                      child: _buildLoginTypeButton('Teacher', selectedRole == UserRole.teacher),
                     ),
                   ],
                 ),
-              ),
-
-              const SizedBox(height: 25),
-
-              // sign in button
-              MyButton(
-                onTap: signUserIn,
-              ),
-            ],
+                const SizedBox(height: 45),
+                MyButton(
+                  onTap: signUserIn,
+                ),
+              ],
+            ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildLoginTypeButton(String type, bool isSelected) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+      decoration: BoxDecoration(
+        color: isSelected ? Colors.black : Colors.grey[400],
+        borderRadius: BorderRadius.circular(5),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+      child: Text(
+        type,
+        style: TextStyle(
+          color: isSelected ? Colors.white : Colors.black,
+          fontSize: 16,
+        ),
+      ),
+    );
+  }
+
+  void forgotPasswordAlert() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Forgot Password?"),
+          content: const Text("Please contact admin for password reset."),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
     );
   }
 }
