@@ -1,3 +1,5 @@
+// ignore_for_file: use_key_in_widget_constructors, library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -12,16 +14,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Navigator(
-        pages: const [
-          MaterialPage(
-            child: HomePage(),
-          ),
-        ],
-        onPopPage: (route, result) => route.didPop(result),
-      ),
+      home: HomePage(),
     );
   }
 }
@@ -51,18 +46,18 @@ class _HomePageState extends State<HomePage> {
         ],
         backgroundColor: Colors.black,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Center(
-          child: Text(
-            'Your content goes here',
-            style: TextStyle(fontSize: 24.0),
-          ),
-        ),
+      body: IndexedStack(
+        index: _currentIndex,
+        children: [
+          const ProfilePage(),
+          AssignmentsPage(),
+          PaymentPage(),
+          FeedbackPage(),
+        ],
       ),
       backgroundColor: Colors.white,
       bottomNavigationBar: Container(
-        margin: const EdgeInsets.only(bottom: 30.0,left: 10.0,right: 10.0),
+        margin: const EdgeInsets.only(bottom: 30.0, left: 10.0, right: 10.0),
         padding: const EdgeInsets.symmetric(horizontal: 10.0),
         height: 64.0,
         decoration: BoxDecoration(
@@ -100,7 +95,8 @@ class _HomePageState extends State<HomePage> {
       child: Container(
         padding: const EdgeInsets.all(8.0),
         decoration: BoxDecoration(
-          color: _currentIndex == index ? Colors.transparent : Colors.transparent,
+          color:
+          _currentIndex == index ? Colors.transparent : Colors.transparent,
           borderRadius: BorderRadius.circular(8.0),
         ),
         child: Column(
@@ -116,13 +112,70 @@ class _HomePageState extends State<HomePage> {
               label,
               style: TextStyle(
                 fontSize: 12.0,
-                // fontWeight: FontWeight.w900,
-                fontWeight: _currentIndex == index ? FontWeight.w900 : FontWeight.w400,
+                fontWeight:
+                _currentIndex == index ? FontWeight.w900 : FontWeight.w400,
                 color: _currentIndex == index ? Colors.redAccent : Colors.white,
               ),
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class ProfilePage extends StatelessWidget {
+  const ProfilePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: Text(
+        'Profile Page',
+        style: TextStyle(fontSize: 24.0),
+      ),
+    );
+  }
+}
+
+class AssignmentsPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return const Column(
+      children: [
+        ListTile(
+          title: Text('Assignment 1'),
+          // Add your assignment details here
+        ),
+        ListTile(
+          title: Text('Assignment 2'),
+          // Add your assignment details here
+        ),
+        // Add more ListTiles for other assignments
+      ],
+    );
+  }
+}
+
+class PaymentPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: Text(
+        'Payment Page',
+        style: TextStyle(fontSize: 24.0),
+      ),
+    );
+  }
+}
+
+class FeedbackPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: Text(
+        'Feedback Page',
+        style: TextStyle(fontSize: 24.0),
       ),
     );
   }
