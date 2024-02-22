@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../screens/assignment_section/view.dart';
 
 void main() {
   runApp(
@@ -50,7 +51,7 @@ class _HomePageState extends State<HomePage> {
         index: _currentIndex,
         children: [
           const ProfilePage(),
-          AssignmentsPage(),
+          const CatAssignment(), // Replaced AssignmentsPage with CatAssignment
           PaymentPage(),
           FeedbackPage(),
         ],
@@ -134,25 +135,6 @@ class ProfilePage extends StatelessWidget {
         'Profile Page',
         style: TextStyle(fontSize: 24.0),
       ),
-    );
-  }
-}
-
-class AssignmentsPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return const Column(
-      children: [
-        ListTile(
-          title: Text('Assignment 1'),
-          // Add your assignment details here
-        ),
-        ListTile(
-          title: Text('Assignment 2'),
-          // Add your assignment details here
-        ),
-        // Add more ListTiles for other assignments
-      ],
     );
   }
 }

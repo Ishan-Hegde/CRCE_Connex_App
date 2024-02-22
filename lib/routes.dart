@@ -5,7 +5,7 @@ import 'screens/app_03/view.dart';
 import 'screens/app_04/view.dart';
 import 'screens/app_05/view.dart';
 import 'screens/app_06/view.dart';
-import 'screens/app_07/view.dart';
+import 'screens/assignment_section/view.dart';
 import 'screens/app_08/view.dart';
 import 'screens/app_09/view.dart';
 import 'screens/app_10/view.dart';

@@ -91,11 +91,11 @@ class CatAssignmentUI extends State<CatAssignment> {
   Widget buildItem(BuildContext context, Item item) {
     return Container(
       width: 175,
-      height: 285,
+      height: 295,
       // Adjusted the height
       margin: const EdgeInsets.only(bottom: 10),
       // Added margin to the top
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
         color: Theme.of(context).cardColor,
