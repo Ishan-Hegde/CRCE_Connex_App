@@ -51,7 +51,7 @@ class _HomePageState extends State<HomePage> {
         index: _currentIndex,
         children: [
           const ProfilePage(),
-          const CatAssignment(), // Replaced AssignmentsPage with CatAssignment
+          const AssignmentPg(), // Replaced AssignmentsPage with CatAssignment
           PaymentPage(),
           FeedbackPage(),
         ],
@@ -59,7 +59,7 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: Colors.white,
       bottomNavigationBar: Container(
         margin: const EdgeInsets.only(bottom: 30.0, left: 10.0, right: 10.0),
-        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+        padding: const EdgeInsets.symmetric(horizontal: 12.0),
         height: 64.0,
         decoration: BoxDecoration(
           color: Colors.black87,

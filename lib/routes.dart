@@ -23,7 +23,7 @@ class Routes {
       '/app04': (context) => const App04(),
       '/app05': (context) => const App05(),
       '/app06': (context) => const App06(),
-      '/app07': (context) => const CatAssignment(),
+      '/app07': (context) => const AssignmentPg(),
       '/app08': (context) => const App08(),
       '/app09': (context) => const App09(),
       '/app10': (context) => const App10(),
