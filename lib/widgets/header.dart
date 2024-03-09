@@ -16,16 +16,16 @@ Widget header(BuildContext context, title) {
           ),
         ),
         const SizedBox(width: 8),
-        Expanded(
-            child: Text(
-          title,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Theme.of(context).colorScheme.onBackground,
-            fontSize: 16,
-          ),
-        ))
+        // Expanded(
+        //     child: Text(
+        //   title,
+        //   overflow: TextOverflow.ellipsis,
+        //   style: TextStyle(
+        //     fontWeight: FontWeight.bold,
+        //     color: Theme.of(context).colorScheme.onBackground,
+        //     fontSize: 16,
+        //   ),
+        // ))
       ],
     ),
   );

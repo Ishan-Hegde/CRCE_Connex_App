@@ -51,7 +51,7 @@ class _HomePageState extends State<HomePage> {
         index: _currentIndex,
         children: [
           const ProfilePage(),
-          const AssignmentPg(), // Replaced AssignmentsPage with CatAssignment
+          const AssignmentPg(),
           PaymentPage(),
           FeedbackPage(),
         ],

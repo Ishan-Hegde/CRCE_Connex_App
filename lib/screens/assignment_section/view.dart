@@ -1,10 +1,16 @@
-import 'package:flutter/material.dart';
+// ignore_for_file: avoid_print, use_build_context_synchronously, duplicate_ignore, unused_import, unused_local_variable
 
+import 'dart:io'; // Add import for File
+import 'package:flutter/material.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/services.dart';
+// ignore: depend_on_referenced_packages
+import 'package:path_provider/path_provider.dart'; // Add import for getTemporaryDirectory
 import '../../widgets/header.dart';
 
 class AssignmentPg extends StatefulWidget {
-  // ignore: use_key_in_widget_constructors
-  const AssignmentPg({Key? key});
+  // ignore: use_super_parameters
+  const AssignmentPg({Key? key}) : super(key: key);
 
   @override
   AssignmentUI createState() => AssignmentUI();
@@ -14,9 +20,9 @@ class Item {
   IconData icon;
   String title;
   String description;
-  int _progress; // Use private variable for progress
-  late Function(int) onProgressChanged; // Callback function for progress change
-  bool isDone = false; // Variable to track if item is done
+  int _progress;
+  late Function(int) onProgressChanged;
+  bool isDone = false;
 
   Item({
     required this.icon,
@@ -25,71 +31,68 @@ class Item {
     required int progress,
   }) : _progress = progress;
 
-  // Getter method for progress
   int get progress => _progress;
 
-  // Setter method for progress
   setProgress(int value) {
     if (value >= 0 && value <= 100) {
       _progress = value;
-      onProgressChanged(value); // Call the callback function when progress changes
+      onProgressChanged(value);
     }
   }
 }
 
 class AssignmentUI extends State<AssignmentPg> {
-  final List<Item> items = [
-    Item(
+  final List<Item> items = List.generate(
+    10,
+        (index) => Item(
       icon: Icons.assignment,
-      title: 'Assignment 1',
+      title: 'Assignment ${index + 1}',
       description: 'Pending',
       progress: 0,
     ),
-    Item(
-      icon: Icons.assignment,
-      title: 'Assignment 2',
-      description: 'Pending',
-      progress: 0,
-    ),
-    Item(
-      icon: Icons.assignment_turned_in_outlined,
-      title: 'Assignment 3',
-      description: 'Completed',
-      progress: 100,
-    ),
-    Item(
-      icon: Icons.assignment,
-      title: 'Assignment 4',
-      description: 'Pending',
-      progress: 0,
-    ),
-    Item(
-      icon: Icons.assignment,
-      title: 'Assignment 5',
-      description: 'Pending',
-      progress: 0,
-    ),
-    Item(
-      icon: Icons.assignment_turned_in_outlined,
-      title: 'Assignment 6',
-      description: 'Completed',
-      progress: 100,
-    ),
-    Item(
-      icon: Icons.assignment,
-      title: 'Assignment 7',
-      description: 'Pending',
-      progress: 0,
-    ),
-    Item(
-      icon: Icons.assignment,
-      title: 'Assignment 8',
-      description: 'Pending',
-      progress: 0,
-    ),
-  ];
+  );
 
-  bool showOnlyChecked = false; // Variable to track whether to show only checked assignments
+  bool showOnlyChecked = false;
+
+  Future<void> _openFileExplorer() async {
+    try {
+      FilePickerResult? result = await FilePicker.platform.pickFiles();
+
+      // ignore: duplicate_ignore, duplicate_ignore
+      if (result != null) {
+        print('File picked: ${result.files.single.path}');
+
+        String? tempDirPath = (await getTemporaryDirectory()).path;
+        String filePath = result.files.single.path!;
+        String fileName = filePath.split('/').last;
+        String tempFilePath = '$tempDirPath/$fileName';
+        await File(filePath).copy(tempFilePath);
+
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('File uploaded successfully: $tempFilePath'),
+          ),
+        );
+      } else {
+        print('User canceled the picker');
+      }
+    } on PlatformException catch (e) {
+      print('Error picking file: ${e.message}');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error picking file: ${e.message}'),
+        ),
+      );
+    } catch (e) {
+      print('Error picking file: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error picking file: $e'),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -98,10 +101,8 @@ class AssignmentUI extends State<AssignmentPg> {
 
     String title = args?['title'] ?? 'Assignments';
 
-    // Filter items based on showOnlyChecked
-    List<Item> filteredItems = showOnlyChecked
-        ? items.where((item) => item.isDone).toList()
-        : items;
+    List<Item> filteredItems =
+    showOnlyChecked ? items.where((item) => item.isDone).toList() : items;
 
     return Scaffold(
       body: SafeArea(
@@ -109,34 +110,37 @@ class AssignmentUI extends State<AssignmentPg> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              header(context, title),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding:
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child: ElevatedButton(
                   onPressed: () {
                     setState(() {
-                      showOnlyChecked = !showOnlyChecked; // Toggle showOnlyChecked
+                      showOnlyChecked = !showOnlyChecked;
                     });
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.blue, // Background color
-                    onPrimary: Colors.white, // Text color
+                    foregroundColor: Colors.white,
+                    backgroundColor: const Color(0xFFE57575),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20.0), // Rounded border
+                      borderRadius: BorderRadius.circular(20.0),
                     ),
-                    padding: EdgeInsets.symmetric(vertical: 12, horizontal: 24), // Padding
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 12, horizontal: 24),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
                         showOnlyChecked ? 'Show All' : 'Show Checked',
-                        style: TextStyle(fontSize: 16),
+                        style: const TextStyle(fontSize: 14),
                       ),
-                      SizedBox(width: 8),
+                      const SizedBox(width: 8),
                       Icon(
-                        showOnlyChecked ? Icons.visibility : Icons.visibility_off,
-                        size: 20,
+                        showOnlyChecked
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                        size: 15,
                       ),
                     ],
                   ),
@@ -151,9 +155,9 @@ class AssignmentUI extends State<AssignmentPg> {
                   mainAxisSpacing: 16.0,
                   childAspectRatio: 0.71,
                 ),
-                itemCount: filteredItems.length, // Use filteredItems.length
+                itemCount: filteredItems.length,
                 itemBuilder: (context, index) {
-                  return buildItem(context, filteredItems[index]); // Use filteredItems
+                  return buildItem(context, filteredItems[index]);
                 },
               ),
             ],
@@ -233,11 +237,7 @@ class AssignmentUI extends State<AssignmentPg> {
           Row(
             children: [
               ElevatedButton(
-                onPressed: () {
-                  // Your custom action when the button is pressed
-                  // ignore: avoid_print
-                  print('Upload button pressed for ${item.title}');
-                },
+                onPressed: _openFileExplorer,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFE57575),
                 ),
@@ -252,7 +252,7 @@ class AssignmentUI extends State<AssignmentPg> {
               GestureDetector(
                 onTap: () {
                   setState(() {
-                    item.isDone = !item.isDone; // Toggle isDone on tap
+                    item.isDone = !item.isDone;
                   });
                 },
                 child: Stack(
