@@ -1,8 +1,10 @@
 // ignore_for_file: use_key_in_widget_constructors, library_private_types_in_public_api
 
+import 'package:crce_connex/screens/feedback_section/view.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../screens/assignment_section/view.dart';
+// Added import for FeedbackPage
 
 void main() {
   runApp(
@@ -53,7 +55,7 @@ class _HomePageState extends State<HomePage> {
           const ProfilePage(),
           const AssignmentPg(),
           PaymentPage(),
-          FeedbackPage(),
+          const FeedbackPage(), // Changed to FeedbackPage
         ],
       ),
       backgroundColor: Colors.white,
@@ -97,7 +99,7 @@ class _HomePageState extends State<HomePage> {
         padding: const EdgeInsets.all(8.0),
         decoration: BoxDecoration(
           color:
-          _currentIndex == index ? Colors.transparent : Colors.transparent,
+              _currentIndex == index ? Colors.transparent : Colors.transparent,
           borderRadius: BorderRadius.circular(8.0),
         ),
         child: Column(
@@ -114,7 +116,7 @@ class _HomePageState extends State<HomePage> {
               style: TextStyle(
                 fontSize: 12.0,
                 fontWeight:
-                _currentIndex == index ? FontWeight.w900 : FontWeight.w400,
+                    _currentIndex == index ? FontWeight.w900 : FontWeight.w400,
                 color: _currentIndex == index ? Colors.redAccent : Colors.white,
               ),
             ),
@@ -126,7 +128,7 @@ class _HomePageState extends State<HomePage> {
 }
 
 class ProfilePage extends StatelessWidget {
-  const ProfilePage({super.key});
+  const ProfilePage({Key? key});
 
   @override
   Widget build(BuildContext context) {
@@ -145,18 +147,6 @@ class PaymentPage extends StatelessWidget {
     return const Center(
       child: Text(
         'Payment Page',
-        style: TextStyle(fontSize: 24.0),
-      ),
-    );
-  }
-}
-
-class FeedbackPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: Text(
-        'Feedback Page',
         style: TextStyle(fontSize: 24.0),
       ),
     );

@@ -4,6 +4,7 @@ import 'dart:io'; // Add import for File
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/services.dart';
+
 // ignore: depend_on_referenced_packages
 import 'package:path_provider/path_provider.dart'; // Add import for getTemporaryDirectory
 import '../../widgets/header.dart';
@@ -44,7 +45,7 @@ class Item {
 class AssignmentUI extends State<AssignmentPg> {
   final List<Item> items = List.generate(
     10,
-        (index) => Item(
+    (index) => Item(
       icon: Icons.assignment,
       title: 'Assignment ${index + 1}',
       description: 'Pending',
@@ -97,12 +98,12 @@ class AssignmentUI extends State<AssignmentPg> {
   @override
   Widget build(BuildContext context) {
     Map<String, dynamic>? args =
-    ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
 
     String title = args?['title'] ?? 'Assignments';
 
     List<Item> filteredItems =
-    showOnlyChecked ? items.where((item) => item.isDone).toList() : items;
+        showOnlyChecked ? items.where((item) => item.isDone).toList() : items;
 
     return Scaffold(
       body: SafeArea(
@@ -112,7 +113,7 @@ class AssignmentUI extends State<AssignmentPg> {
             children: [
               Padding(
                 padding:
-                const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child: ElevatedButton(
                   onPressed: () {
                     setState(() {
