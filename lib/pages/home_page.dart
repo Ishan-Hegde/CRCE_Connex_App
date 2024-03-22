@@ -180,11 +180,11 @@ class PaymentPage extends StatelessWidget {
     try {
       UpiResponse response = await upiIndia.startTransaction(
         app: UpiApp.googlePay, // Use your desired UPI app here
-        receiverUpiId: 'receiver@upi', // Replace with the receiver's UPI ID
-        receiverName: 'Receiver Name',
+        receiverUpiId: 'saieeraj.acharya@okicici', // Replace with the receiver's UPI ID
+        receiverName: 'Saieeraj Acharya',
         transactionRefId: 'uniqueTransactionRefId',
         transactionNote: 'Test transaction',
-        amount: 100.00, // Replace with the amount to be paid
+        amount: 60.00, // Replace with the amount to be paid
       );
       // Handle the transaction response
       print(response);
