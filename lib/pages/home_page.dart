@@ -145,46 +145,17 @@ class ProfilePage extends StatelessWidget {
 
 
 
-// class PaymentPage extends StatelessWidget {
-//   final UpiIndia _upiIndia = UpiIndia();
-//
-//   Future<UpiResponse> initiateTransaction(UpiApp app) async {
-//     return _upiIndia.startTransaction(
-//       app: app,
-//       receiverUpiId: "9078600498@ybl",
-//       receiverName: 'Md Azharuddin',
-//       transactionRefId: 'TestingUpiIndiaPlugin',
-//       transactionNote: 'Not actual. Just an example.',
-//       amount: 1.00,
-//     );
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Center(
-//       child: ElevatedButton(
-//         onPressed: () async {
-//           // Call initiateTransaction method when button is pressed
-//           UpiResponse response = await initiateTransaction(UpiApp.googlePay);
-//           // Handle response here
-//           print(response);
-//         },
-//         child: Text('Make Payment'),
-//       ),
-//     );
-//   }
-// }
 class PaymentPage extends StatelessWidget {
   Future<void> initiatePayment() async {
     UpiIndia upiIndia = UpiIndia();
     try {
       UpiResponse response = await upiIndia.startTransaction(
         app: UpiApp.googlePay, // Use your desired UPI app here
-        receiverUpiId: '9833239529', // Replace with the receiver's UPI ID
-        receiverName: 'Saieeraj Acharya',
+        receiverUpiId: '9833239529@okicici', // Replace with the receiver's UPI ID
+        receiverName: 'Receiver Name',
         transactionRefId: 'uniqueTransactionRefId',
         transactionNote: 'Test transaction',
-        amount: 60.00, // Replace with the amount to be paid
+        amount: 100.00, // Replace with the amount to be paid
       );
       // Handle the transaction response
       print(response);

@@ -36,7 +36,6 @@ dependencies:
   url_launcher: ^6.0.9
   file_picker: ^4.0.0
   permission_handler: ^11.0.1
-  upi_india: 3.0.1
 
   # table_calendar: ^3.0.0-nullsafety.3
   intl: ^0.18.1
