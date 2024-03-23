@@ -4,7 +4,7 @@ import 'package:crce_connex/screens/feedback_section/view.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../screens/assignment_section/view.dart';
-import 'package:upi_india/upi_india.dart';
+import '../screens/payment_page/view.dart'; // Import the payment_page.dart file
 
 // Added import for FeedbackPage
 
@@ -53,11 +53,11 @@ class _HomePageState extends State<HomePage> {
       ),
       body: IndexedStack(
         index: _currentIndex,
-        children: [
-          const ProfilePage(),
-          const AssignmentPg(),
+        children: const [
+          ProfilePage(),
+          AssignmentPg(),
           PaymentPage(),
-          const FeedbackPage(), // Changed to FeedbackPage
+          FeedbackPage(),
         ],
       ),
       backgroundColor: Colors.white,
@@ -101,7 +101,7 @@ class _HomePageState extends State<HomePage> {
         padding: const EdgeInsets.all(8.0),
         decoration: BoxDecoration(
           color:
-              _currentIndex == index ? Colors.transparent : Colors.transparent,
+          _currentIndex == index ? Colors.transparent : Colors.transparent,
           borderRadius: BorderRadius.circular(8.0),
         ),
         child: Column(
@@ -118,7 +118,7 @@ class _HomePageState extends State<HomePage> {
               style: TextStyle(
                 fontSize: 12.0,
                 fontWeight:
-                    _currentIndex == index ? FontWeight.w900 : FontWeight.w400,
+                _currentIndex == index ? FontWeight.w900 : FontWeight.w400,
                 color: _currentIndex == index ? Colors.redAccent : Colors.white,
               ),
             ),
@@ -138,38 +138,6 @@ class ProfilePage extends StatelessWidget {
       child: Text(
         'Profile Page',
         style: TextStyle(fontSize: 24.0),
-      ),
-    );
-  }
-}
-
-
-
-class PaymentPage extends StatelessWidget {
-  Future<void> initiatePayment() async {
-    UpiIndia upiIndia = UpiIndia();
-    try {
-      UpiResponse response = await upiIndia.startTransaction(
-        app: UpiApp.googlePay, // Use your desired UPI app here
-        receiverUpiId: '9833239529@okicici', // Replace with the receiver's UPI ID
-        receiverName: 'Receiver Name',
-        transactionRefId: 'uniqueTransactionRefId',
-        transactionNote: 'Test transaction',
-        amount: 100.00, // Replace with the amount to be paid
-      );
-      // Handle the transaction response
-      print(response);
-    } catch (e) {
-      print('Error initiating transaction: $e');
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: ElevatedButton(
-        onPressed: initiatePayment,
-        child: Text('Make Payment'),
       ),
     );
   }

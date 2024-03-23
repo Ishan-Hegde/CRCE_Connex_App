@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api, use_key_in_widget_constructors
+
 import 'package:flutter/material.dart';
 
 class FeedbackPage extends StatelessWidget {
@@ -5,9 +7,9 @@ class FeedbackPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(16.0),
         child: FeedbackModule(),
       ),
     );
@@ -129,7 +131,7 @@ class _FeedbackModuleState extends State<FeedbackModule> {
             );
           },
           style: ElevatedButton.styleFrom(
-            primary: Color(0xFFE57575),
+            backgroundColor: const Color(0xFFE57575),
             textStyle: const TextStyle(fontSize: 18),
             padding: const EdgeInsets.symmetric(vertical: 16),
             shape: RoundedRectangleBorder(
@@ -161,7 +163,7 @@ class _FeedbackModuleState extends State<FeedbackModule> {
                         return ListTile(
                           title: Text(
                             feedbackList[index],
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                            style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
                           subtitle: Text('Reply: ${replyList[index]}'),
                         );
@@ -173,7 +175,7 @@ class _FeedbackModuleState extends State<FeedbackModule> {
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                      style: ElevatedButton.styleFrom(primary: Color(0xFFE57575)),
+                      style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFE57575)),
                       child: const Text('Close'),
                     ),
                   ],
@@ -182,7 +184,7 @@ class _FeedbackModuleState extends State<FeedbackModule> {
             );
           },
           style: ElevatedButton.styleFrom(
-            primary: Color(0xFFE57575),
+            backgroundColor: const Color(0xFFE57575),
             textStyle: const TextStyle(fontSize: 18),
             padding: const EdgeInsets.symmetric(vertical: 16),
             shape: RoundedRectangleBorder(
