@@ -1,7 +1,10 @@
+// ignore_for_file: use_key_in_widget_constructors, library_private_types_in_public_api, avoid_print
+
 import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:upi_india/upi_india.dart';
 
 class PaymentPage extends StatefulWidget {
@@ -20,11 +23,20 @@ class _PaymentPageState extends State<PaymentPage> {
   TextEditingController captchaController = TextEditingController();
   bool captchaVerified = false;
   bool isLoading = false;
+  bool paymentSuccess = false; // Add paymentSuccess variable
+  String paymentMessage = ''; // Add paymentMessage variable
 
   List<String> purposeOptions = [
-    'Lorem Ipsum 1',
-    'Lorem Ipsum 2',
-    'Lorem Ipsum 3',
+    'Admission Application Fee',
+    'Crescendo',
+    'Athlos',
+    'Euphoria',
+    'Sports',
+    'CRMD',
+    'Exam Fee',
+    'Team Abadha',
+    'Team CFR',
+    'TEDX',
   ];
 
   void generateCaptcha() {
@@ -74,7 +86,7 @@ class _PaymentPageState extends State<PaymentPage> {
 
   Future<void> initiatePayment() async {
     // Simulate payment process with a delay
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 1));
 
     UpiIndia upiIndia = UpiIndia();
     try {
@@ -87,13 +99,22 @@ class _PaymentPageState extends State<PaymentPage> {
         // Use selectedPurpose or a default value
         amount: double.parse(amountController.text),
       );
-      print(response);
-    } catch (e) {
-      print('Error initiating transaction: $e');
-    } finally {
+
       setState(() {
         isLoading = false; // Hide loader after payment process completes
+        paymentSuccess = true;
+        paymentMessage = 'Transaction successful!'; // Set success message
       });
+
+      print(response);
+    } catch (e) {
+      setState(() {
+        isLoading = false; // Hide loader after payment process completes
+        paymentSuccess = false;
+        paymentMessage =
+            'Transaction failed. Please try again.'; // Set failure message
+      });
+      print('Error initiating transaction: $e');
     }
   }
 
@@ -105,7 +126,7 @@ class _PaymentPageState extends State<PaymentPage> {
 
   Future<void> delayedRefresh() async {
     // Simulate a delay of 1 second before refreshing
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 1));
 
     // Clear input fields and generate new captcha
     emailController.clear();
@@ -128,14 +149,50 @@ class _PaymentPageState extends State<PaymentPage> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const SizedBox(height: 12.0),
-              TextField(
+              TextFormField(
                 controller: emailController,
-                decoration: const InputDecoration(labelText: 'Email'),
+                decoration: const InputDecoration(
+                  labelText: 'Email',
+                  labelStyle: TextStyle(color: Colors.black), // Text color
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Color.fromARGB(255, 227, 70, 70),
+                    ),
+                  ),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Color.fromARGB(255, 227, 70, 70),
+                    ),
+                  ),
+                ),
+                validator: (value) {
+                  if (value == null || !value.contains('@')) {
+                    return 'Invalid email';
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 16.0),
-              TextField(
+              TextFormField(
                 controller: phoneNumberController,
-                decoration: const InputDecoration(labelText: 'Phone Number'),
+                decoration: const InputDecoration(
+                  labelText: 'Phone Number',
+                  labelStyle: TextStyle(color: Colors.black), // Text color
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Color.fromARGB(255, 227, 70, 70),
+                    ),
+                  ),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Color.fromARGB(255, 227, 70, 70),
+                    ),
+                  ),
+                ),
+                keyboardType: TextInputType.number,
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.digitsOnly,
+                ],
               ),
               const SizedBox(height: 16.0),
               DropdownButtonFormField<String>(
@@ -151,33 +208,75 @@ class _PaymentPageState extends State<PaymentPage> {
                     child: Text(value),
                   );
                 }).toList(),
-                decoration: const InputDecoration(labelText: 'Purpose'),
+                decoration: const InputDecoration(
+                  labelText: 'Purpose',
+                  labelStyle: TextStyle(color: Colors.black), // Text color
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Color.fromARGB(255, 227, 70, 70),
+                    ),
+                  ),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Color.fromARGB(255, 227, 70, 70),
+                    ),
+                  ),
+                ),
               ),
               const SizedBox(height: 16.0),
-              TextField(
+              TextFormField(
                 controller: amountController,
-                decoration: const InputDecoration(labelText: 'Amount'),
+                decoration: const InputDecoration(
+                  labelText: 'Amount',
+                  labelStyle: TextStyle(color: Colors.black), // Text color
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Color.fromARGB(255, 227, 70, 70),
+                    ),
+                  ),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Color.fromARGB(255, 227, 70, 70),
+                    ),
+                  ),
+                ),
                 keyboardType: TextInputType.number,
               ),
               const SizedBox(height: 16.0),
               Text('Captcha: $captchaValue'), // Display the captcha value
               const SizedBox(height: 16.0),
-              TextField(
+              TextFormField(
                 controller: captchaController,
-                decoration: const InputDecoration(labelText: 'Verify Captcha'),
+                decoration: const InputDecoration(
+                  labelText: 'Verify Captcha',
+                  labelStyle: TextStyle(color: Colors.black), // Text color
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Color.fromARGB(255, 227, 70, 70),
+                    ),
+                  ),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Color.fromARGB(255, 227, 70, 70),
+                    ),
+                  ),
+                ),
               ),
               const SizedBox(height: 16.0),
               ElevatedButton(
                 onPressed: captchaVerified ? initiatePayment : verifyCaptcha,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color.fromARGB(255, 227, 70, 70),
+                ),
                 child:
                     Text(captchaVerified ? 'Make Payment' : 'Verify Captcha'),
               ),
               const SizedBox(height: 16.0),
               isLoading
-                  ? Center(
+                  ? const Center(
                       child: CircularProgressIndicator(),
                     )
-                  : SizedBox(), // Show loader if isLoading is true
+                  : const SizedBox(), // Show loader if isLoading is true
             ],
           ),
         ),

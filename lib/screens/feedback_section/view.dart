@@ -131,7 +131,7 @@ class _FeedbackModuleState extends State<FeedbackModule> {
             );
           },
           style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFFE57575),
+            backgroundColor: const Color.fromARGB(255, 227, 70, 70),
             textStyle: const TextStyle(fontSize: 18),
             padding: const EdgeInsets.symmetric(vertical: 16),
             shape: RoundedRectangleBorder(
@@ -175,7 +175,9 @@ class _FeedbackModuleState extends State<FeedbackModule> {
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                      style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFE57575)),
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              const Color.fromARGB(255, 227, 70, 70)),
                       child: const Text('Close'),
                     ),
                   ],
@@ -184,7 +186,7 @@ class _FeedbackModuleState extends State<FeedbackModule> {
             );
           },
           style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFFE57575),
+            backgroundColor: const Color.fromARGB(255, 227, 70, 70),
             textStyle: const TextStyle(fontSize: 18),
             padding: const EdgeInsets.symmetric(vertical: 16),
             shape: RoundedRectangleBorder(

@@ -43,6 +43,7 @@ class Item {
 }
 
 class AssignmentUI extends State<AssignmentPg> {
+  String? uploadedFileName;
   final List<Item> items = List.generate(
     10,
     (index) => Item(
@@ -57,24 +58,52 @@ class AssignmentUI extends State<AssignmentPg> {
 
   Future<void> _openFileExplorer() async {
     try {
-      FilePickerResult? result = await FilePicker.platform.pickFiles();
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['pdf'],
+      );
 
-      // ignore: duplicate_ignore, duplicate_ignore
       if (result != null) {
-        print('File picked: ${result.files.single.path}');
-
-        String? tempDirPath = (await getTemporaryDirectory()).path;
         String filePath = result.files.single.path!;
-        String fileName = filePath.split('/').last;
-        String tempFilePath = '$tempDirPath/$fileName';
-        await File(filePath).copy(tempFilePath);
+        File file = File(filePath);
+        int fileSizeInBytes = await file.length();
 
-        // ignore: use_build_context_synchronously
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('File uploaded successfully: $tempFilePath'),
-          ),
-        );
+        if (fileSizeInBytes <= 10 * 1024 * 1024) {
+          // PDF size is under 10 MB
+          String fileName = filePath.split('/').last;
+
+          // Mark the corresponding assignment as checked
+          setState(() {
+            for (var item in items) {
+              if (item.title == 'Assignment $fileName') {
+                item.isDone = true;
+                item.description = 'Checked';
+              } else {
+                item.isDone = false; // Uncheck other assignments
+                item.description = 'Pending';
+              }
+            }
+          });
+
+          // Update uploaded file name above the upload button
+          setState(() {
+            uploadedFileName = fileName;
+          });
+
+          // Show snackbar for successful upload
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('File uploaded successfully: $fileName'),
+            ),
+          );
+        } else {
+          // PDF size exceeds 10 MB, show error message
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('File size exceeds 10 MB limit.'),
+            ),
+          );
+        }
       } else {
         print('User canceled the picker');
       }
@@ -97,6 +126,11 @@ class AssignmentUI extends State<AssignmentPg> {
 
   @override
   Widget build(BuildContext context) {
+    Text(
+      uploadedFileName ?? 'No file uploaded',
+      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+    );
+
     Map<String, dynamic>? args =
         ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
 
@@ -122,7 +156,7 @@ class AssignmentUI extends State<AssignmentPg> {
                   },
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white,
-                    backgroundColor: const Color(0xFFE57575),
+                    backgroundColor: const Color.fromARGB(255, 227, 70, 70),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20.0),
                     ),
@@ -190,7 +224,7 @@ class AssignmentUI extends State<AssignmentPg> {
           Icon(
             item.icon,
             size: 60,
-            color: const Color(0xFFE57575),
+            color: const Color.fromARGB(255, 227, 70, 70),
           ),
           const SizedBox(height: 10),
           Text(
@@ -219,16 +253,17 @@ class AssignmentUI extends State<AssignmentPg> {
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 20,
-                  color: Color(0xFFE57575),
+                  color: Color.fromARGB(255, 227, 70, 70),
                 ),
               ),
               const SizedBox(width: 8),
               Expanded(
                 child: LinearProgressIndicator(
                   value: item.progress / 100,
-                  backgroundColor: const Color(0xFFE57575).withOpacity(0.3),
+                  backgroundColor:
+                      const Color.fromARGB(255, 227, 70, 70).withOpacity(0.3),
                   valueColor: const AlwaysStoppedAnimation<Color>(
-                    Color(0xFFE57575),
+                    Color.fromARGB(255, 227, 70, 70),
                   ),
                 ),
               ),
@@ -240,7 +275,7 @@ class AssignmentUI extends State<AssignmentPg> {
               ElevatedButton(
                 onPressed: _openFileExplorer,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFE57575),
+                  backgroundColor: const Color.fromARGB(255, 227, 70, 70),
                 ),
                 child: const Text(
                   'Upload',
