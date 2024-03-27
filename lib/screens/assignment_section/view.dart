@@ -21,25 +21,13 @@ class Item {
   IconData icon;
   String title;
   String description;
-  int _progress;
-  late Function(int) onProgressChanged;
   bool isDone = false;
 
   Item({
     required this.icon,
     required this.title,
     required this.description,
-    required int progress,
-  }) : _progress = progress;
-
-  int get progress => _progress;
-
-  setProgress(int value) {
-    if (value >= 0 && value <= 100) {
-      _progress = value;
-      onProgressChanged(value);
-    }
-  }
+  });
 }
 
 class AssignmentUI extends State<AssignmentPg> {
@@ -50,7 +38,6 @@ class AssignmentUI extends State<AssignmentPg> {
       icon: Icons.assignment,
       title: 'Assignment ${index + 1}',
       description: 'Pending',
-      progress: 0,
     ),
   );
 
@@ -186,9 +173,9 @@ class AssignmentUI extends State<AssignmentPg> {
                 shrinkWrap: true,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
-                  crossAxisSpacing: 8.0,
+                  crossAxisSpacing: 10.0,
                   mainAxisSpacing: 16.0,
-                  childAspectRatio: 0.71,
+                  childAspectRatio: 0.77,
                 ),
                 itemCount: filteredItems.length,
                 itemBuilder: (context, index) {
@@ -246,30 +233,6 @@ class AssignmentUI extends State<AssignmentPg> {
             ),
           ),
           const SizedBox(height: 12),
-          Row(
-            children: [
-              Text(
-                '${item.progress}%',
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                  color: Color.fromARGB(255, 227, 70, 70),
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: LinearProgressIndicator(
-                  value: item.progress / 100,
-                  backgroundColor:
-                      const Color.fromARGB(255, 227, 70, 70).withOpacity(0.3),
-                  valueColor: const AlwaysStoppedAnimation<Color>(
-                    Color.fromARGB(255, 227, 70, 70),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
           Row(
             children: [
               ElevatedButton(
