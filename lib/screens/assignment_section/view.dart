@@ -63,7 +63,7 @@ class AssignmentUI extends State<AssignmentPg> {
           setState(() {
             for (var item in items) {
               if (item.title == 'Assignment $fileName') {
-                item.isDone = true;
+                item.isDone = true; // Mark the checkbox as checked
                 item.description = 'Checked';
               } else {
                 item.isDone = false; // Uncheck other assignments
@@ -173,7 +173,7 @@ class AssignmentUI extends State<AssignmentPg> {
                 shrinkWrap: true,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
-                  crossAxisSpacing: 10.0,
+                  crossAxisSpacing: 1.0,
                   mainAxisSpacing: 16.0,
                   childAspectRatio: 0.77,
                 ),
