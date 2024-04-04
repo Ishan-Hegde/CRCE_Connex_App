@@ -1,17 +1,14 @@
-// ignore_for_file: avoid_print, use_build_context_synchronously, duplicate_ignore, unused_import, unused_local_variable
+// ignore_for_file: unused_local_variable, use_build_context_synchronously, avoid_print
 
-import 'dart:io'; // Add import for File
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/services.dart';
-
-// ignore: depend_on_referenced_packages
-import 'package:path_provider/path_provider.dart'; // Add import for getTemporaryDirectory
-import '../../widgets/header.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:collection/collection.dart';
 
 class AssignmentPg extends StatefulWidget {
-  // ignore: use_super_parameters
-  const AssignmentPg({Key? key}) : super(key: key);
+  const AssignmentPg({super.key});
 
   @override
   AssignmentUI createState() => AssignmentUI();
@@ -41,6 +38,7 @@ class AssignmentUI extends State<AssignmentPg> {
     ),
   );
 
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   bool showOnlyChecked = false;
 
   Future<void> _openFileExplorer() async {
@@ -56,35 +54,31 @@ class AssignmentUI extends State<AssignmentPg> {
         int fileSizeInBytes = await file.length();
 
         if (fileSizeInBytes <= 10 * 1024 * 1024) {
-          // PDF size is under 10 MB
           String fileName = filePath.split('/').last;
 
-          // Mark the corresponding assignment as checked
-          setState(() {
-            for (var item in items) {
-              if (item.title == 'Assignment $fileName') {
-                item.isDone = true; // Mark the checkbox as checked
-                item.description = 'Checked';
-              } else {
-                item.isDone = false; // Uncheck other assignments
-                item.description = 'Pending';
-              }
-            }
-          });
+          Item? uploadedItem = items.firstWhereOrNull(
+            (item) => item.title == 'Assignment ${fileName.split(".")[0]}',
+          );
 
-          // Update uploaded file name above the upload button
+          if (uploadedItem != null) {
+            setState(() {
+              uploadedItem.isDone = true;
+              uploadedItem.description = 'Checked';
+            });
+          }
+
           setState(() {
             uploadedFileName = fileName;
           });
 
-          // Show snackbar for successful upload
+          await _updateAssignmentStatus(fileName, true);
+
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('File uploaded successfully: $fileName'),
             ),
           );
         } else {
-          // PDF size exceeds 10 MB, show error message
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text('File size exceeds 10 MB limit.'),
@@ -108,6 +102,18 @@ class AssignmentUI extends State<AssignmentPg> {
           content: Text('Error picking file: $e'),
         ),
       );
+    }
+  }
+
+  Future<void> _updateAssignmentStatus(
+      String assignmentTitle, bool isDone) async {
+    try {
+      await _firestore.collection('assignments').doc(assignmentTitle).update({
+        'isDone': isDone,
+      });
+      print('Assignment status updated in Firestore');
+    } catch (e) {
+      print('Error updating assignment status: $e');
     }
   }
 
@@ -252,6 +258,7 @@ class AssignmentUI extends State<AssignmentPg> {
                 onTap: () {
                   setState(() {
                     item.isDone = !item.isDone;
+                    print('Item ${item.title} isDone: ${item.isDone}');
                   });
                 },
                 child: Stack(

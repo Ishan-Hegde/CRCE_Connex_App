@@ -37,6 +37,8 @@ dependencies:
   file_picker: ^8.0.0+1
   permission_handler: ^11.0.1
   upi_india: ^3.0.1
+  collection: ^1.15.0
+  cloud_firestore: 4.14.0
 
   # table_calendar: ^3.0.0-nullsafety.3
   intl: ^0.19.0
