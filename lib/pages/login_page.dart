@@ -8,7 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 enum UserRole { student, teacher }
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  const LoginPage({Key? key});
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -20,12 +20,21 @@ class _LoginPageState extends State<LoginPage> {
   late bool isTeacherLogin;
   late UserRole selectedRole;
   bool showErrorMessage = false;
+  bool _isDisposed = false; // Add a flag to track disposal
 
   @override
   void initState() {
     super.initState();
     isTeacherLogin = false;
     selectedRole = UserRole.student; // Default to student role
+  }
+
+  @override
+  void dispose() {
+    _isDisposed = true; // Set the flag to true when disposing the widget
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
   }
 
   void signUserIn() async {
@@ -42,38 +51,55 @@ class _LoginPageState extends State<LoginPage> {
       // Assuming you have a database where user roles are stored
       UserRole userRole = await getUserRole(emailController.text);
 
-      if (userRole == selectedRole) {
-        await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: emailController.text,
-          password: passwordController.text,
-        );
+      if (!_isDisposed) {
+        // Check if the widget is still active
+        if (userRole == selectedRole) {
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
+            email: emailController.text,
+            password: passwordController.text,
+          );
 
-        setState(() {
-          showErrorMessage = false; // Reset error message visibility
-        });
+          setState(() {
+            showErrorMessage = false; // Reset error message visibility
+          });
 
-        // Dismiss the progress dialog after a slight delay
-        Future.delayed(const Duration(milliseconds: 100), () {
+          // Dismiss the progress dialog after a slight delay
+          Future.delayed(const Duration(milliseconds: 100), () {
+            if (!_isDisposed) {
+              // Check again before popping the context
+              Navigator.pop(context);
+            }
+          });
+        } else {
+          // Show error message if user's role does not match selected role
           Navigator.pop(context);
-        });
-      } else {
-        // Show error message if user's role does not match selected role
-        Navigator.pop(context);
-        showRoleMismatchAlert();
+          if (!_isDisposed) {
+            // Check if the widget is still active
+            showRoleMismatchAlert();
+          }
+        }
       }
     } on FirebaseAuthException {
-      Navigator.pop(context);
+      if (!_isDisposed) {
+        // Check if the widget is still active
+        Navigator.pop(context);
 
-      setState(() {
-        showErrorMessage =
-            true; // Set error message for any authentication error
-      });
+        setState(() {
+          showErrorMessage =
+              true; // Set error message for any authentication error
+        });
+      }
     } catch (e) {
-      Navigator.pop(context);
+      if (!_isDisposed) {
+        // Check if the widget is still active
+        if (mounted) {
+          Navigator.pop(context);
+        }
 
-      setState(() {
-        showErrorMessage = true; // Set error message for any other error
-      });
+        setState(() {
+          showErrorMessage = true; // Set error message for any other error
+        });
+      }
     }
   }
 
@@ -225,6 +251,7 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(height: 45),
                 MyButton(
                   onTap: _validateAndSignUserIn,
+                  text: 'Login',
                 ),
               ],
             ),

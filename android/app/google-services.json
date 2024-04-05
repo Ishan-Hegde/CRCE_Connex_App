@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "960014127826",
+    "firebase_url": "https://crce-connex-default-rtdb.asia-southeast1.firebasedatabase.app",
     "project_id": "crce-connex",
     "storage_bucket": "crce-connex.appspot.com"
   },

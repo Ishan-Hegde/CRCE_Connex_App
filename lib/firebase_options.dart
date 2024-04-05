@@ -49,6 +49,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '960014127826',
     projectId: 'crce-connex',
     authDomain: 'crce-connex.firebaseapp.com',
+    databaseURL:
+        'https://crce-connex-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'crce-connex.appspot.com',
     measurementId: 'G-JSKV1RF0YG',
   );
@@ -58,6 +60,8 @@ class DefaultFirebaseOptions {
     appId: '1:960014127826:android:58d302ed9da749cf83530b',
     messagingSenderId: '960014127826',
     projectId: 'crce-connex',
+    databaseURL:
+        'https://crce-connex-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'crce-connex.appspot.com',
   );
 
@@ -66,6 +70,8 @@ class DefaultFirebaseOptions {
     appId: '1:960014127826:ios:6c22cc174af3436783530b',
     messagingSenderId: '960014127826',
     projectId: 'crce-connex',
+    databaseURL:
+        'https://crce-connex-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'crce-connex.appspot.com',
     iosBundleId: 'com.example.flutterApps',
   );
@@ -75,6 +81,8 @@ class DefaultFirebaseOptions {
     appId: '1:960014127826:ios:63709929073fdebc83530b',
     messagingSenderId: '960014127826',
     projectId: 'crce-connex',
+    databaseURL:
+        'https://crce-connex-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'crce-connex.appspot.com',
     iosBundleId: 'com.example.flutterApps.RunnerTests',
   );

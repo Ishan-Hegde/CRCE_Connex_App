@@ -1,14 +1,13 @@
-// ignore_for_file: unused_local_variable, use_build_context_synchronously, avoid_print
-
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class AssignmentPg extends StatefulWidget {
-  const AssignmentPg({super.key});
+  const AssignmentPg({Key? key}) : super(key: key);
 
   @override
   AssignmentUI createState() => AssignmentUI();
@@ -50,12 +49,12 @@ class AssignmentUI extends State<AssignmentPg> {
 
       if (result != null) {
         String filePath = result.files.single.path!;
-        File file = File(filePath);
+        File file = File(filePath); // Create the File object
+        String fileName = filePath.split('/').last; // Define fileName here
+
         int fileSizeInBytes = await file.length();
 
         if (fileSizeInBytes <= 10 * 1024 * 1024) {
-          String fileName = filePath.split('/').last;
-
           Item? uploadedItem = items.firstWhereOrNull(
             (item) => item.title == 'Assignment ${fileName.split(".")[0]}',
           );
@@ -71,7 +70,8 @@ class AssignmentUI extends State<AssignmentPg> {
             uploadedFileName = fileName;
           });
 
-          await _updateAssignmentStatus(fileName, true);
+          await _updateAssignmentStatus(
+              fileName, true, file); // Pass the file argument
 
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -106,12 +106,24 @@ class AssignmentUI extends State<AssignmentPg> {
   }
 
   Future<void> _updateAssignmentStatus(
-      String assignmentTitle, bool isDone) async {
+      String assignmentTitle, bool isDone, File uploadedFile) async {
     try {
-      await _firestore.collection('assignments').doc(assignmentTitle).update({
-        'isDone': isDone,
+      // Upload the file to Firestore storage
+      Reference storageReference =
+          FirebaseStorage.instance.ref().child('uploads/$assignmentTitle.pdf');
+      UploadTask uploadTask = storageReference.putFile(uploadedFile);
+      await uploadTask.whenComplete(() async {
+        // Get the download URL for the file
+        String fileURL = await storageReference.getDownloadURL();
+
+        // Update assignment status and store file URL in Firestore
+        await _firestore.collection('assignments').doc(assignmentTitle).update({
+          'isDone': isDone,
+          'fileURL': fileURL, // Store the file URL in Firestore
+        });
+
+        print('Assignment status updated in Firestore');
       });
-      print('Assignment status updated in Firestore');
     } catch (e) {
       print('Error updating assignment status: $e');
     }
@@ -127,6 +139,7 @@ class AssignmentUI extends State<AssignmentPg> {
     Map<String, dynamic>? args =
         ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
 
+    // ignore: unused_local_variable
     String title = args?['title'] ?? 'Assignments';
 
     List<Item> filteredItems =
