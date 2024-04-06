@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crce_connex/pages/home_page.dart';
 import 'package:crce_connex/pages/teacher_home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -54,7 +55,28 @@ class AuthPage extends StatelessWidget {
   }
 
   Future<String?> getUserRole(String? email) async {
-    await Future.delayed(const Duration(seconds: 2));
-    return 'student'; // Placeholder logic, replace with actual implementation
+    if (email == null) return null; // Handle null email
+
+    try {
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .where('email', isEqualTo: email)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        String? role = querySnapshot.docs.first.get('role');
+        if (role == 'teacher') {
+          return 'teacher';
+        } else if (role == 'student') {
+          return 'student';
+        }
+      } else {
+        print('User not found in the database');
+      }
+    } catch (e) {
+      print('Error fetching user role: $e');
+    }
+
+    return null; // Default return null if role not found or error occurs
   }
 }
