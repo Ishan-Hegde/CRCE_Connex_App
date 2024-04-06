@@ -1,205 +1,128 @@
-// ignore_for_file: library_private_types_in_public_api, use_key_in_widget_constructors
-
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-class FeedbackPage extends StatelessWidget {
-  const FeedbackPage({Key? key});
+class StudentFeedbackPage extends StatelessWidget {
+  const StudentFeedbackPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: FeedbackModule(),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Student Feedback'),
+        backgroundColor: Colors.redAccent,
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: () async {
+                User? user = FirebaseAuth.instance.currentUser;
+                if (user != null) {
+                  String userId = user.uid;
+                  // Show feedback dialog and pass userId to submitFeedback
+                  showDialog(
+                    context: context,
+                    builder: (context) => FeedbackDialog(userId: userId),
+                  );
+                } else {
+                  // Handle user not signed in
+                }
+              },
+              child: const Text('Leave Feedback'),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => FeedbackHistoryPage(),
+                  ),
+                );
+              },
+              child: const Text('Feedback History and Replies'),
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
-class FeedbackModule extends StatefulWidget {
-  const FeedbackModule({Key? key});
+class FeedbackDialog extends StatefulWidget {
+  final String userId;
+
+  const FeedbackDialog({Key? key, required this.userId}) : super(key: key);
 
   @override
-  _FeedbackModuleState createState() => _FeedbackModuleState();
+  _FeedbackDialogState createState() => _FeedbackDialogState();
 }
 
-class _FeedbackModuleState extends State<FeedbackModule> {
+class _FeedbackDialogState extends State<FeedbackDialog> {
   final TextEditingController _feedbackController = TextEditingController();
-  final TextEditingController _replyController = TextEditingController();
 
-  List<String> feedbackList = [];
-  List<String> replyList = [];
-
-  void submitFeedback() {
+  void submitFeedback(String userId) async {
     String feedback = _feedbackController.text.trim();
-    if (feedback.isNotEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Feedback submitted!')),
-      );
-      _feedbackController.clear();
-      setState(() {
-        feedbackList.add(feedback);
-        replyList.add(''); // Initialize with an empty reply
+    if (mounted && feedback.isNotEmpty) {
+      // Check if the widget is mounted
+      FirebaseFirestore.instance.collection('feedback').add({
+        'text': feedback,
+        'userId': userId,
+        'timestamp': FieldValue.serverTimestamp(),
+      }).then((docRef) {
+        if (mounted) {
+          // Check again before showing a Snackbar
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Feedback submitted!')),
+          );
+        }
+      }).catchError((error) {
+        if (mounted) {
+          // Check again before showing a Snackbar
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Failed to submit feedback. Please try again.'),
+            ),
+          );
+        }
       });
+      Navigator.pop(context); // Close the dialog
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter feedback.')),
-      );
-    }
-  }
-
-  void showReplyDialog(int index) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Reply to Feedback'),
-          content: TextField(
-            controller: _replyController,
-            decoration: const InputDecoration(
-              labelText: 'Enter your reply',
-            ),
-            maxLines: 3,
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('Cancel'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                String reply = _replyController.text.trim();
-                if (reply.isNotEmpty) {
-                  setState(() {
-                    replyList[index] = reply;
-                  });
-                  Navigator.pop(context);
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Please enter a reply.')),
-                  );
-                }
-              },
-              child: const Text('Send Reply'),
-            ),
-          ],
+      if (mounted) {
+        // Check again before showing a Snackbar
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please enter feedback.')),
         );
-      },
-    );
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        ElevatedButton(
-          onPressed: () {
-            // Show input feedback module
-            showDialog(
-              context: context,
-              builder: (context) {
-                return AlertDialog(
-                  title: const Text('Input Feedback'),
-                  content: TextField(
-                    controller: _feedbackController,
-                    decoration: const InputDecoration(
-                      labelText: 'Enter your feedback',
-                      border: OutlineInputBorder(),
-                    ),
-                    maxLines: 5,
-                  ),
-                  actions: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Text('Cancel'),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        submitFeedback();
-                        Navigator.pop(context);
-                      },
-                      child: const Text('Submit Feedback'),
-                    ),
-                  ],
-                );
-              },
-            );
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color.fromARGB(255, 227, 70, 70),
-            textStyle: const TextStyle(fontSize: 18),
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-          child: const Text(
-            'Leave Feedback',
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+    return AlertDialog(
+      title: const Text('Input Feedback'),
+      content: TextField(
+        controller: _feedbackController,
+        decoration: const InputDecoration(
+          labelText: 'Enter your feedback',
+          border: OutlineInputBorder(),
         ),
-        const SizedBox(height: 24.0),
+        maxLines: 5,
+      ),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: const Text('Cancel'),
+        ),
         ElevatedButton(
           onPressed: () {
-            // Show previously sent messages module
-            showDialog(
-              context: context,
-              builder: (context) {
-                return AlertDialog(
-                  title: const Text('Feedback History'),
-                  content: SizedBox(
-                    height: 300,
-                    child: ListView.builder(
-                      itemCount: feedbackList.length,
-                      itemBuilder: (context, index) {
-                        return ListTile(
-                          title: Text(
-                            feedbackList[index],
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          subtitle: Text('Reply: ${replyList[index]}'),
-                        );
-                      },
-                    ),
-                  ),
-                  actions: [
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              const Color.fromARGB(255, 227, 70, 70)),
-                      child: const Text('Close'),
-                    ),
-                  ],
-                );
-              },
-            );
+            submitFeedback(widget.userId);
           },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color.fromARGB(255, 227, 70, 70),
-            textStyle: const TextStyle(fontSize: 18),
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-          child: const Text(
-            'View Feedback History',
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+          child: const Text('Submit Feedback'),
         ),
       ],
     );
@@ -208,7 +131,52 @@ class _FeedbackModuleState extends State<FeedbackModule> {
   @override
   void dispose() {
     _feedbackController.dispose();
-    _replyController.dispose();
     super.dispose();
+  }
+}
+
+class FeedbackHistoryPage extends StatelessWidget {
+  const FeedbackHistoryPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Feedback History'),
+        backgroundColor: Colors.redAccent,
+      ),
+      body: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('feedback')
+            .limit(15)
+            .orderBy('timestamp', descending: true)
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          }
+          final List<DocumentSnapshot> feedbackDocs = snapshot.data!.docs;
+          return ListView.builder(
+            itemCount: feedbackDocs.length,
+            itemBuilder: (context, index) {
+              final feedback = feedbackDocs[index].get('text');
+              final data = feedbackDocs[index].data() as Map<String, dynamic>;
+              final reply =
+                  data.containsKey('reply') ? data['reply'] : 'No reply';
+              return ListTile(
+                title: Text(
+                  'Feedback: $feedback',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                subtitle: Text('Reply: $reply'),
+              );
+            },
+          );
+        },
+      ),
+    );
   }
 }

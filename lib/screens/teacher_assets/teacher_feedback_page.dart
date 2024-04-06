@@ -1,94 +1,24 @@
-// ignore_for_file: library_private_types_in_public_api, use_key_in_widget_constructors
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:uuid/uuid.dart'; // Import Uuid package for generating unique IDs
 
-class FeedbackPage extends StatelessWidget {
-  const FeedbackPage({Key? key});
+class TeacherFeedbackPage extends StatelessWidget {
+  const TeacherFeedbackPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: FeedbackModule(),
       ),
     );
   }
 }
 
-class FeedbackModule extends StatefulWidget {
+class FeedbackModule extends StatelessWidget {
   const FeedbackModule({Key? key});
-
-  @override
-  _FeedbackModuleState createState() => _FeedbackModuleState();
-}
-
-class _FeedbackModuleState extends State<FeedbackModule> {
-  final TextEditingController _feedbackController = TextEditingController();
-  final TextEditingController _replyController = TextEditingController();
-
-  List<String> feedbackList = [];
-  List<String> replyList = [];
-
-  void submitFeedback() {
-    String feedback = _feedbackController.text.trim();
-    if (feedback.isNotEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Feedback submitted!')),
-      );
-      _feedbackController.clear();
-      setState(() {
-        feedbackList.add(feedback);
-        replyList.add(''); // Initialize with an empty reply
-      });
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter feedback.')),
-      );
-    }
-  }
-
-  void showReplyDialog(int index) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Reply to Feedback'),
-          content: TextField(
-            controller: _replyController,
-            decoration: const InputDecoration(
-              labelText: 'Enter your reply',
-            ),
-            maxLines: 3,
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('Cancel'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                String reply = _replyController.text.trim();
-                if (reply.isNotEmpty) {
-                  setState(() {
-                    replyList[index] = reply;
-                  });
-                  Navigator.pop(context);
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Please enter a reply.')),
-                  );
-                }
-              },
-              child: const Text('Send Reply'),
-            ),
-          ],
-        );
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -96,50 +26,22 @@ class _FeedbackModuleState extends State<FeedbackModule> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         ElevatedButton(
-          onPressed: () {
-            // Show input feedback module
-            showDialog(
-              context: context,
-              builder: (context) {
-                return AlertDialog(
-                  title: const Text('Input Feedback'),
-                  content: TextField(
-                    controller: _feedbackController,
-                    decoration: const InputDecoration(
-                      labelText: 'Enter your feedback',
-                      border: OutlineInputBorder(),
-                    ),
-                    maxLines: 5,
-                  ),
-                  actions: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Text('Cancel'),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        submitFeedback();
-                        Navigator.pop(context);
-                      },
-                      child: const Text('Submit Feedback'),
-                    ),
-                  ],
-                );
-              },
-            );
+          onPressed: () async {
+            User? user = FirebaseAuth.instance.currentUser;
+            if (user != null) {
+              String userId = user.uid;
+              String feedbackId = Uuid().v4(); // Generate unique feedback ID
+              showDialog(
+                context: context,
+                builder: (context) =>
+                    ReplyDialog(userId: userId, feedbackId: feedbackId),
+              );
+            } else {
+              // Handle user not signed in
+            }
           },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color.fromARGB(255, 227, 70, 70),
-            textStyle: const TextStyle(fontSize: 18),
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
           child: const Text(
-            'Leave Feedback',
+            'Reply to Feedback',
             style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
@@ -147,59 +49,127 @@ class _FeedbackModuleState extends State<FeedbackModule> {
           ),
         ),
         const SizedBox(height: 24.0),
-        ElevatedButton(
-          onPressed: () {
-            // Show previously sent messages module
-            showDialog(
-              context: context,
-              builder: (context) {
-                return AlertDialog(
-                  title: const Text('Feedback History'),
-                  content: SizedBox(
-                    height: 300,
-                    child: ListView.builder(
-                      itemCount: feedbackList.length,
-                      itemBuilder: (context, index) {
-                        return ListTile(
-                          title: Text(
-                            feedbackList[index],
-                            style: const TextStyle(fontWeight: FontWeight.bold),
+        StreamBuilder<QuerySnapshot>(
+          stream: FirebaseFirestore.instance.collection('feedback').snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const CircularProgressIndicator();
+            } else if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            } else {
+              final List<DocumentSnapshot> feedbackDocs = snapshot.data!.docs;
+              return Expanded(
+                child: ListView.builder(
+                  itemCount: feedbackDocs.length,
+                  itemBuilder: (context, index) {
+                    final feedback = feedbackDocs[index].get('text');
+                    return ListTile(
+                      title: Text(
+                        feedback,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      subtitle: Row(
+                        children: [
+                          const Text('Reply: '),
+                          ElevatedButton(
+                            onPressed: () async {
+                              User? user = FirebaseAuth.instance.currentUser;
+                              if (user != null) {
+                                String userId = user.uid;
+                                String feedbackId = feedbackDocs[index].id;
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => ReplyDialog(
+                                      userId: userId, feedbackId: feedbackId),
+                                );
+                              } else {
+                                // Handle user not signed in
+                              }
+                            },
+                            child: const Text('Reply'),
                           ),
-                          subtitle: Text('Reply: ${replyList[index]}'),
-                        );
-                      },
-                    ),
-                  ),
-                  actions: [
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              const Color.fromARGB(255, 227, 70, 70)),
-                      child: const Text('Close'),
-                    ),
-                  ],
-                );
-              },
-            );
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              );
+            }
           },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color.fromARGB(255, 227, 70, 70),
-            textStyle: const TextStyle(fontSize: 18),
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-          child: const Text(
-            'View Feedback History',
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+        ),
+      ],
+    );
+  }
+}
+
+class ReplyDialog extends StatefulWidget {
+  final String userId;
+  final String feedbackId;
+
+  const ReplyDialog({Key? key, required this.userId, required this.feedbackId})
+      : super(key: key);
+
+  @override
+  _ReplyDialogState createState() => _ReplyDialogState();
+}
+
+class _ReplyDialogState extends State<ReplyDialog> {
+  final TextEditingController _replyController = TextEditingController();
+
+  void submitReply() async {
+    if (!mounted) {
+      return; // Exit if the widget is not mounted
+    }
+
+    String reply = _replyController.text.trim();
+    if (reply.isNotEmpty) {
+      try {
+        await FirebaseFirestore.instance
+            .collection('feedback')
+            .doc(widget.feedbackId)
+            .update({
+          'reply': reply,
+          'userId': widget.userId,
+          'timestamp': FieldValue.serverTimestamp(),
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Reply submitted!')),
+        );
+      } catch (error) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to submit reply. Please try again.')),
+        );
+      }
+      Navigator.pop(context); // Close the dialog
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter a reply.')),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Reply to Feedback'),
+      content: TextField(
+        controller: _replyController,
+        decoration: const InputDecoration(
+          labelText: 'Enter your reply',
+          border: OutlineInputBorder(),
+        ),
+        maxLines: 3,
+      ),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: const Text('Cancel'),
+        ),
+        ElevatedButton(
+          onPressed: submitReply, // Call submitReply method directly
+          child: const Text('Send Reply'),
         ),
       ],
     );
@@ -207,7 +177,6 @@ class _FeedbackModuleState extends State<FeedbackModule> {
 
   @override
   void dispose() {
-    _feedbackController.dispose();
     _replyController.dispose();
     super.dispose();
   }

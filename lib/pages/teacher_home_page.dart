@@ -1,5 +1,5 @@
-import 'package:crce_connex/screens/student_assets/feedback_section/view.dart';
 import 'package:crce_connex/screens/teacher_assets/teacher_assignment_page.dart';
+import 'package:crce_connex/screens/teacher_assets/teacher_feedback_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -51,7 +51,7 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
         children: const [
           ProfilePage(),
           TeacherAssignmentPage(),
-          FeedbackModule(),
+          TeacherFeedbackPage(),
         ],
       ),
       backgroundColor: Colors.white,

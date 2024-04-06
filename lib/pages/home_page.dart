@@ -55,7 +55,7 @@ class _HomePageState extends State<HomePage> {
           ProfilePage(),
           AssignmentPg(),
           PaymentPage(),
-          FeedbackPage(),
+          StudentFeedbackPage(),
         ],
       ),
       backgroundColor: Colors.white,
