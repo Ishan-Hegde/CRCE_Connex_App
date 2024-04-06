@@ -37,41 +37,33 @@ class _LoginPageState extends State<LoginPage> {
 
   void signUserIn() async {
     try {
-      // Assuming you have a database where user roles are stored
-      UserRole userRole = await getUserRole(emailController.text);
+      // Sign in the user using Firebase Auth
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text,
+        password: passwordController.text,
+      );
 
-      if (!_isDisposed) {
-        // Check if the widget is still active
-        if (userRole == selectedRole) {
-          await FirebaseAuth.instance.signInWithEmailAndPassword(
-            email: emailController.text,
-            password: passwordController.text,
-          );
+      // Reset error message visibility
+      setState(() {
+        showErrorMessage = false;
+      });
 
-          setState(() {
-            showErrorMessage = false; // Reset error message visibility
-          });
-
-          // Dismiss the progress dialog after a slight delay
-          Future.delayed(const Duration(milliseconds: 100), () {
-            if (!_isDisposed) {
-              // Check again before popping the context
-              Navigator.pop(context); // Pop the AuthPage
-            }
-          });
-        } else {
-          // Show error message if user's role does not match selected role
-          setState(() {
-            showErrorMessage = true; // Set error message visibility
-          });
+      // Dismiss the progress dialog after a slight delay
+      Future.delayed(const Duration(milliseconds: 100), () {
+        if (!_isDisposed) {
+          // Check again before popping the context
+          Navigator.pop(context); // Pop the AuthPage
         }
-      }
+      });
     } on FirebaseAuthException catch (e) {
       // Handle specific FirebaseAuthException types
+      setState(() {
+        showErrorMessage = true; // Set error message visibility
+      });
+
       if (e.code == 'user-not-found' || e.code == 'wrong-password') {
-        setState(() {
-          showErrorMessage = true; // Set error message visibility
-        });
+        // Show specific error message for user-not-found or wrong-password
+        print('Incorrect email or password');
       } else {
         // Handle other FirebaseAuthException types if needed
         print('FirebaseAuthException: ${e.code}');
@@ -80,10 +72,6 @@ class _LoginPageState extends State<LoginPage> {
       // Handle other exceptions
       print('Error signing in: $e');
     }
-  }
-
-  Future<UserRole> getUserRole(String email) async {
-    return UserRole.student; // Placeholder return value
   }
 
   void showEmptyFieldsAlert() {

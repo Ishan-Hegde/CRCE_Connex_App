@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../screens/assignment_section/view.dart';
 import '../screens/payment_page/view.dart';
-import '../screens/teacher_specific_page/teachers_page.dart'; // Import the teacher-specific page
 
 void main() {
   runApp(
@@ -53,7 +52,6 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
           ProfilePage(),
           AssignmentPg(),
           PaymentPage(),
-          TeacherSpecificPage(),
         ],
       ),
       backgroundColor: Colors.white,
@@ -79,8 +77,6 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
             _buildDrawerItem(Icons.person, 'Profile', 0),
             _buildDrawerItem(Icons.assignment, 'Assignments', 1),
             _buildDrawerItem(Icons.payment, 'Payment', 2),
-            _buildDrawerItem(
-                Icons.info, 'Teacher Details', 3), // Teacher-specific option
           ],
         ),
       ),

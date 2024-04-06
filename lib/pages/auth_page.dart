@@ -37,7 +37,7 @@ class AuthPage extends StatelessWidget {
                   } else if (userRole == 'teacher') {
                     return const TeacherHomePage(); // Navigate to teacher home page
                   } else {
-                    // Handle other roles or errors by showing the login page again
+                    // Handle other roles by showing the login page again
                     return const LoginPage(); // Show the login page again
                   }
                 }
