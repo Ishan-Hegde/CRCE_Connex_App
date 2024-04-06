@@ -1,8 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-// ignore: unused_import
-import 'package:uuid/uuid.dart'; // Import Uuid package for generating unique IDs
 
 class TeacherFeedbackPage extends StatelessWidget {
   const TeacherFeedbackPage({Key? key}) : super(key: key);
@@ -101,18 +98,13 @@ class _FeedbackModuleState extends State<FeedbackModule> {
                     const Text('Reply: '),
                     ElevatedButton(
                       onPressed: () async {
-                        User? user = FirebaseAuth.instance.currentUser;
-                        if (user != null) {
-                          String userId = user.uid;
-                          String feedbackId = feedbackDocs[index]['id'];
-                          showDialog(
-                            context: context,
-                            builder: (context) => ReplyDialog(
-                                userId: userId, feedbackId: feedbackId),
-                          );
-                        } else {
-                          // Handle user not signed in
-                        }
+                        String userId = feedbackDocs[index]['userId'];
+                        String feedbackId = feedbackDocs[index]['id'];
+                        showDialog(
+                          context: context,
+                          builder: (context) => ReplyDialog(
+                              userId: userId, feedbackId: feedbackId),
+                        );
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor:
