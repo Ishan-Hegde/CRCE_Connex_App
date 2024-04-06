@@ -243,8 +243,7 @@ class _PaymentPageState extends State<PaymentPage> {
                 keyboardType: TextInputType.number,
               ),
               const SizedBox(height: 16.0),
-              // Text('Captcha: $captchaValue'), // Display the captcha value
-              Text('Captcha: LST,CST,___'), // Display the captcha value
+              Text('Captcha: $captchaValue'), // Display the captcha value
               const SizedBox(height: 16.0),
               TextFormField(
                 controller: captchaController,
