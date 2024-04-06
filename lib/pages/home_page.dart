@@ -108,7 +108,7 @@ class _HomePageState extends State<HomePage> {
             Icon(
               icon,
               size: 24.0,
-              color: _currentIndex == index ? Colors.redAccent : Colors.white,
+              color: _currentIndex == index ? Color(0xFFB6002B) : Colors.white,
             ),
             const SizedBox(height: 4.0),
             Text(
@@ -117,7 +117,8 @@ class _HomePageState extends State<HomePage> {
                 fontSize: 12.0,
                 fontWeight:
                     _currentIndex == index ? FontWeight.w900 : FontWeight.w400,
-                color: _currentIndex == index ? Colors.redAccent : Colors.white,
+                color:
+                    _currentIndex == index ? Color(0xFFB6002B) : Colors.white,
               ),
             ),
           ],

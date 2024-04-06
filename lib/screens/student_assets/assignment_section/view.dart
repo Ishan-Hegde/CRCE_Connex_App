@@ -162,7 +162,7 @@ class AssignmentUI extends State<AssignmentPg> {
                   },
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white,
-                    backgroundColor: const Color.fromARGB(255, 227, 70, 70),
+                    backgroundColor: Color(0xFFB6002B),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20.0),
                     ),
@@ -230,7 +230,7 @@ class AssignmentUI extends State<AssignmentPg> {
           Icon(
             item.icon,
             size: 60,
-            color: const Color.fromARGB(255, 227, 70, 70),
+            color: const Color(0xFFB6002B),
           ),
           const SizedBox(height: 10),
           Text(
@@ -257,7 +257,7 @@ class AssignmentUI extends State<AssignmentPg> {
               ElevatedButton(
                 onPressed: _openFileExplorer,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 227, 70, 70),
+                  backgroundColor: const Color(0xFFB6002B),
                 ),
                 child: const Text(
                   'Upload',

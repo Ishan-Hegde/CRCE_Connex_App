@@ -156,12 +156,12 @@ class _PaymentPageState extends State<PaymentPage> {
                   labelStyle: TextStyle(color: Colors.black), // Text color
                   focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(
-                      color: Color.fromARGB(255, 227, 70, 70),
+                      color: Color(0xFFB6002B),
                     ),
                   ),
                   enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(
-                      color: Color.fromARGB(255, 227, 70, 70),
+                      color: Color(0xFFB6002B),
                     ),
                   ),
                 ),
@@ -180,12 +180,12 @@ class _PaymentPageState extends State<PaymentPage> {
                   labelStyle: TextStyle(color: Colors.black), // Text color
                   focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(
-                      color: Color.fromARGB(255, 227, 70, 70),
+                      color: Color(0xFFB6002B),
                     ),
                   ),
                   enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(
-                      color: Color.fromARGB(255, 227, 70, 70),
+                      color: Color(0xFFB6002B),
                     ),
                   ),
                 ),
@@ -213,12 +213,12 @@ class _PaymentPageState extends State<PaymentPage> {
                   labelStyle: TextStyle(color: Colors.black), // Text color
                   focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(
-                      color: Color.fromARGB(255, 227, 70, 70),
+                      color: Color(0xFFB6002B),
                     ),
                   ),
                   enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(
-                      color: Color.fromARGB(255, 227, 70, 70),
+                      color: Color(0xFFB6002B),
                     ),
                   ),
                 ),
@@ -231,12 +231,12 @@ class _PaymentPageState extends State<PaymentPage> {
                   labelStyle: TextStyle(color: Colors.black), // Text color
                   focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(
-                      color: Color.fromARGB(255, 227, 70, 70),
+                      color: Color(0xFFB6002B),
                     ),
                   ),
                   enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(
-                      color: Color.fromARGB(255, 227, 70, 70),
+                      color: Color(0xFFB6002B),
                     ),
                   ),
                 ),
@@ -252,12 +252,12 @@ class _PaymentPageState extends State<PaymentPage> {
                   labelStyle: TextStyle(color: Colors.black), // Text color
                   focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(
-                      color: Color.fromARGB(255, 227, 70, 70),
+                      color: Color(0xFFB6002B),
                     ),
                   ),
                   enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(
-                      color: Color.fromARGB(255, 227, 70, 70),
+                      color: Color(0xFFB6002B),
                     ),
                   ),
                 ),
@@ -266,7 +266,7 @@ class _PaymentPageState extends State<PaymentPage> {
               ElevatedButton(
                 onPressed: captchaVerified ? initiatePayment : verifyCaptcha,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 227, 70, 70),
+                  backgroundColor: const Color(0xFFB6002B),
                 ),
                 child:
                     Text(captchaVerified ? 'Make Payment' : 'Verify Captcha'),

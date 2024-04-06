@@ -24,7 +24,7 @@ class AuthPage extends StatelessWidget {
                   // Show a loading indicator while fetching user role
                   return const Center(
                     child: CircularProgressIndicator(
-                      color: Colors.redAccent,
+                      color: Color(0xFFB6002B),
                     ),
                   );
                 } else if (roleSnapshot.hasError) {

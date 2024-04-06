@@ -19,7 +19,7 @@ class AppTheme {
           surface: Color(0xFF1B1C21),
           onSurface: Color(0xFFC1C1C1),
           error: Colors.red,
-          onError: Colors.redAccent,
+          onError: Color(0xFFB6002B),
         ));
   }
 
@@ -40,7 +40,7 @@ class AppTheme {
         surface: Color(0xFFF6F6F6),
         onSurface: Color(0xFF3A3A3A),
         error: Colors.red,
-        onError: Colors.redAccent,
+        onError: Color(0xFFB6002B),
       ),
     );
   }

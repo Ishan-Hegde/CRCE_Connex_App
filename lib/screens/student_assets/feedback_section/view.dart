@@ -68,7 +68,7 @@ class FeedbackCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 3,
-      color: Colors.redAccent,
+      color: Color(0xFFB6002B),
       child: InkWell(
         onTap: onPressed,
         child: Padding(
@@ -192,7 +192,7 @@ class FeedbackHistoryPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Feedback History'),
-        backgroundColor: Colors.redAccent,
+        backgroundColor: Color(0xFFB6002B),
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance

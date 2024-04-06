@@ -45,7 +45,7 @@ class TeacherAssignmentPage extends StatelessWidget {
             },
             child: const Text('View File'),
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color.fromARGB(255, 227, 70, 70),
+              backgroundColor: const Color(0xFFB6002B),
             ),
           ),
         ));
