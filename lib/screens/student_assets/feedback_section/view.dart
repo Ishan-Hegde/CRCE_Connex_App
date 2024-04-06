@@ -13,8 +13,8 @@ class StudentFeedbackPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(
-              width: 195,
-              height: 195,
+              width: 200,
+              height: 160,
               child: FeedbackCard(
                 icon: Icons.feedback_outlined,
                 label: 'Leave Feedback',
@@ -34,8 +34,8 @@ class StudentFeedbackPage extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             SizedBox(
-              width: 195,
-              height: 195,
+              width: 200,
+              height: 160,
               child: FeedbackCard(
                 icon: Icons.history_edu_outlined,
                 label: 'Feedback History',
@@ -76,7 +76,7 @@ class FeedbackCard extends StatelessWidget {
       child: InkWell(
         onTap: onPressed,
         child: Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: const EdgeInsets.all(6.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -190,6 +190,11 @@ class _FeedbackDialogState extends State<FeedbackDialog> {
 class FeedbackHistoryPage extends StatelessWidget {
   const FeedbackHistoryPage({Key? key}) : super(key: key);
 
+  void deleteFeedback(String feedbackId) {
+    // Delete the feedback document with the given ID from the 'feedback' collection
+    FirebaseFirestore.instance.collection('feedback').doc(feedbackId).delete();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -206,9 +211,10 @@ class FeedbackHistoryPage extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
-                child: CircularProgressIndicator(
-              color: Color(0xFFB6002B),
-            ));
+              child: CircularProgressIndicator(
+                color: Color(0xFFB6002B),
+              ),
+            );
           }
           if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
@@ -217,6 +223,7 @@ class FeedbackHistoryPage extends StatelessWidget {
           return ListView.builder(
             itemCount: feedbackDocs.length,
             itemBuilder: (context, index) {
+              final feedbackId = feedbackDocs[index].id;
               final feedback = feedbackDocs[index].get('text');
               final data = feedbackDocs[index].data() as Map<String, dynamic>;
               final reply =
@@ -227,6 +234,39 @@ class FeedbackHistoryPage extends StatelessWidget {
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 subtitle: Text('Reply: $reply'),
+                trailing: IconButton(
+                  icon: Icon(Icons.delete),
+                  onPressed: () {
+                    // Show a confirmation dialog before deleting the feedback
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: Text('Confirm Deletion'),
+                        content: Text(
+                            'Are you sure you want to delete this feedback at your end? It will still be available at the teachers end.'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop(); // Close the dialog
+                            },
+                            child: Text('Cancel'),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              // Call the deleteFeedback function to delete the feedback
+                              deleteFeedback(feedbackId);
+                              Navigator.of(context).pop(); // Close the dialog
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Feedback deleted')),
+                              );
+                            },
+                            child: Text('Delete'),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
               );
             },
           );
