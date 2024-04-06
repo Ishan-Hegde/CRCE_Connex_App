@@ -275,8 +275,9 @@ class _PaymentPageState extends State<PaymentPage> {
               const SizedBox(height: 16.0),
               isLoading
                   ? Center(
-                      child: CircularProgressIndicator(color: Color(0xFFB6002B),
-                    )
+                      child: CircularProgressIndicator(
+                      color: Color(0xFFB6002B),
+                    ))
                   : const SizedBox(), // Show loader if isLoading is true
             ],
           ),
