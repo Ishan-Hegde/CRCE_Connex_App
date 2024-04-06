@@ -36,15 +36,6 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void signUserIn() async {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
-      },
-    );
-
     try {
       // Assuming you have a database where user roles are stored
       UserRole userRole = await getUserRole(emailController.text);
@@ -65,39 +56,29 @@ class _LoginPageState extends State<LoginPage> {
           Future.delayed(const Duration(milliseconds: 100), () {
             if (!_isDisposed) {
               // Check again before popping the context
-              Navigator.pop(context);
+              Navigator.pop(context); // Pop the AuthPage
             }
           });
         } else {
           // Show error message if user's role does not match selected role
-          Navigator.pop(context);
-          if (!_isDisposed) {
-            // Check if the widget is still active
-            showRoleMismatchAlert();
-          }
+          setState(() {
+            showErrorMessage = true; // Set error message visibility
+          });
         }
       }
-    } on FirebaseAuthException {
-      if (!_isDisposed) {
-        // Check if the widget is still active
-        Navigator.pop(context);
-
+    } on FirebaseAuthException catch (e) {
+      // Handle specific FirebaseAuthException types
+      if (e.code == 'user-not-found' || e.code == 'wrong-password') {
         setState(() {
-          showErrorMessage =
-              true; // Set error message for any authentication error
+          showErrorMessage = true; // Set error message visibility
         });
+      } else {
+        // Handle other FirebaseAuthException types if needed
+        print('FirebaseAuthException: ${e.code}');
       }
     } catch (e) {
-      if (!_isDisposed) {
-        // Check if the widget is still active
-        if (mounted) {
-          Navigator.pop(context);
-        }
-
-        setState(() {
-          showErrorMessage = true; // Set error message for any other error
-        });
-      }
+      // Handle other exceptions
+      print('Error signing in: $e');
     }
   }
 
@@ -156,6 +137,14 @@ class _LoginPageState extends State<LoginPage> {
         showErrorMessage = false; // Reset error message visibility
       });
       signUserIn(); // Proceed with sign-in attempt
+    }
+
+    // Show error message for incorrect email/password
+    if (emailController.text != 'correct@email.com' ||
+        passwordController.text != 'correctpassword') {
+      setState(() {
+        showErrorMessage = true;
+      });
     }
   }
 
