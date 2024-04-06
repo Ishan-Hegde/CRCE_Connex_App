@@ -13,8 +13,8 @@ class StudentFeedbackPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(
-              width: 195, // Set the width of the card
-              height: 195, // Set the height of the card
+              width: 195,
+              height: 195,
               child: FeedbackCard(
                 icon: Icons.feedback_outlined,
                 label: 'Leave Feedback',
@@ -34,8 +34,8 @@ class StudentFeedbackPage extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             SizedBox(
-              width: 195, // Set the width of the card
-              height: 195, // Set the height of the card
+              width: 195,
+              height: 195,
               child: FeedbackCard(
                 icon: Icons.history_edu_outlined,
                 label: 'Feedback History',
@@ -165,12 +165,15 @@ class _FeedbackDialogState extends State<FeedbackDialog> {
           onPressed: () {
             Navigator.pop(context);
           },
-          child: const Text('Cancel'),
+          child: const Text('Cancel',
+              style: TextStyle(color: Color(0xFFB6002B))), // Changed text color
         ),
         ElevatedButton(
           onPressed: () {
             submitFeedback(widget.userId);
           },
+          style: ElevatedButton.styleFrom(
+              backgroundColor: Color(0xFFB6002B)), // Changed button color
           child: const Text('Submit Feedback'),
         ),
       ],
@@ -202,7 +205,10 @@ class FeedbackHistoryPage extends StatelessWidget {
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return Center(
+                child: CircularProgressIndicator(
+              color: Color(0xFFB6002B),
+            ));
           }
           if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));

@@ -53,7 +53,7 @@ class FeedbackModule extends StatelessWidget {
           stream: FirebaseFirestore.instance.collection('feedback').snapshots(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const CircularProgressIndicator();
+              return CircularProgressIndicator();
             } else if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');
             } else {
