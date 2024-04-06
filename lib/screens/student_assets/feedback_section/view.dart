@@ -8,43 +8,92 @@ class StudentFeedbackPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Student Feedback'),
-        backgroundColor: Colors.redAccent,
-      ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            ElevatedButton(
-              onPressed: () async {
-                User? user = FirebaseAuth.instance.currentUser;
-                if (user != null) {
-                  String userId = user.uid;
-                  // Show feedback dialog and pass userId to submitFeedback
-                  showDialog(
-                    context: context,
-                    builder: (context) => FeedbackDialog(userId: userId),
-                  );
-                } else {
-                  // Handle user not signed in
-                }
-              },
-              child: const Text('Leave Feedback'),
+            Expanded(
+              child: FeedbackCard(
+                icon: Icons.feedback_outlined,
+                label: 'Leave Feedback',
+                onPressed: () async {
+                  User? user = FirebaseAuth.instance.currentUser;
+                  if (user != null) {
+                    String userId = user.uid;
+                    showDialog(
+                      context: context,
+                      builder: (context) => FeedbackDialog(userId: userId),
+                    );
+                  } else {
+                    // Handle user not signed in
+                  }
+                },
+              ),
             ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => FeedbackHistoryPage(),
-                  ),
-                );
-              },
-              child: const Text('Feedback History and Replies'),
+            const SizedBox(width: 16),
+            Expanded(
+              child: FeedbackCard(
+                icon: Icons.history_edu_outlined,
+                label: 'Feedback History and Replies',
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => FeedbackHistoryPage(),
+                    ),
+                  );
+                },
+              ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class FeedbackCard extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final VoidCallback onPressed;
+
+  const FeedbackCard({
+    Key? key,
+    required this.icon,
+    required this.label,
+    required this.onPressed,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 3,
+      color: Colors.redAccent,
+      child: InkWell(
+        onTap: onPressed,
+        child: Padding(
+          padding: const EdgeInsets.all(20.0), // Increased padding for spacing
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment:
+                MainAxisAlignment.center, // Center the content vertically
+            children: [
+              Icon(
+                icon,
+                size: 50,
+                color: Colors.white, // White icon color
+              ),
+              const SizedBox(height: 10),
+              Text(
+                label,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold, // Bold text
+                  color: Colors.white, // White font color
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -179,4 +228,10 @@ class FeedbackHistoryPage extends StatelessWidget {
       ),
     );
   }
+}
+
+void main() {
+  runApp(MaterialApp(
+    home: StudentFeedbackPage(),
+  ));
 }
