@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+// ignore: unused_import
 import 'package:uuid/uuid.dart'; // Import Uuid package for generating unique IDs
 
 class TeacherFeedbackPage extends StatelessWidget {
@@ -10,92 +11,120 @@ class TeacherFeedbackPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(25.0),
         child: FeedbackModule(),
       ),
     );
   }
 }
 
-class FeedbackModule extends StatelessWidget {
+class FeedbackModule extends StatefulWidget {
   const FeedbackModule({Key? key});
+
+  @override
+  _FeedbackModuleState createState() => _FeedbackModuleState();
+}
+
+class _FeedbackModuleState extends State<FeedbackModule> {
+  List<Map<String, dynamic>> feedbackDocs = [];
+
+  @override
+  void initState() {
+    super.initState();
+    loadFeedbackData();
+  }
+
+  Future<void> loadFeedbackData() async {
+    QuerySnapshot<Map<String, dynamic>> snapshot =
+        await FirebaseFirestore.instance.collection('feedback').get();
+    setState(() {
+      feedbackDocs = snapshot.docs
+          .map((doc) => {
+                'id': doc.id,
+                'text': doc.get('text'),
+                'userId': doc.get('userId'),
+                'userEmail': '', // Placeholder for user email
+              })
+          .toList();
+    });
+    // Fetch and update user emails
+    await fetchUserEmails();
+  }
+
+  Future<void> fetchUserEmails() async {
+    for (var feedback in feedbackDocs) {
+      String userId = feedback['userId'];
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .get();
+      setState(() {
+        feedback['userEmail'] = userDoc.get('email');
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        ElevatedButton(
-          onPressed: () async {
-            User? user = FirebaseAuth.instance.currentUser;
-            if (user != null) {
-              String userId = user.uid;
-              String feedbackId = Uuid().v4(); // Generate unique feedback ID
-              showDialog(
-                context: context,
-                builder: (context) =>
-                    ReplyDialog(userId: userId, feedbackId: feedbackId),
-              );
-            } else {
-              // Handle user not signed in
-            }
-          },
-          child: const Text(
-            'Reply to Feedback',
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-        const SizedBox(height: 24.0),
-        StreamBuilder<QuerySnapshot>(
-          stream: FirebaseFirestore.instance.collection('feedback').snapshots(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return CircularProgressIndicator(color: Color(0xFFB6002B));
-            } else if (snapshot.hasError) {
-              return Text('Error: ${snapshot.error}');
-            } else {
-              final List<DocumentSnapshot> feedbackDocs = snapshot.data!.docs;
-              return Expanded(
-                child: ListView.builder(
-                  itemCount: feedbackDocs.length,
-                  itemBuilder: (context, index) {
-                    final feedback = feedbackDocs[index].get('text');
-                    return ListTile(
-                      title: Text(
-                        feedback,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
+        Expanded(
+          child: ListView.builder(
+            itemCount: feedbackDocs.length,
+            itemBuilder: (context, index) {
+              final feedback = feedbackDocs[index]['text'];
+              final userEmail = feedbackDocs[index]['userEmail'];
+              return ListTile(
+                title: Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'User: $userEmail',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey, // Color for user info
+                        ),
                       ),
-                      subtitle: Row(
-                        children: [
-                          const Text('Reply: '),
-                          ElevatedButton(
-                            onPressed: () async {
-                              User? user = FirebaseAuth.instance.currentUser;
-                              if (user != null) {
-                                String userId = user.uid;
-                                String feedbackId = feedbackDocs[index].id;
-                                showDialog(
-                                  context: context,
-                                  builder: (context) => ReplyDialog(
-                                      userId: userId, feedbackId: feedbackId),
-                                );
-                              } else {
-                                // Handle user not signed in
-                              }
-                            },
-                            child: const Text('Reply'),
-                          ),
-                        ],
+                      SizedBox(height: 4),
+                      Text(
+                        'Feedback: $feedback',
+                        style: TextStyle(fontWeight: FontWeight.bold),
                       ),
-                    );
-                  },
+                    ],
+                  ),
+                ),
+                subtitle: Row(
+                  children: [
+                    const Text('Reply: '),
+                    ElevatedButton(
+                      onPressed: () async {
+                        User? user = FirebaseAuth.instance.currentUser;
+                        if (user != null) {
+                          String userId = user.uid;
+                          String feedbackId = feedbackDocs[index]['id'];
+                          showDialog(
+                            context: context,
+                            builder: (context) => ReplyDialog(
+                                userId: userId, feedbackId: feedbackId),
+                          );
+                        } else {
+                          // Handle user not signed in
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            Color(0xFFB6002B), // Changed button color
+                      ),
+                      child: const Text('Reply'),
+                    ),
+                  ],
                 ),
               );
-            }
-          },
+            },
+          ),
         ),
       ],
     );
@@ -165,10 +194,14 @@ class _ReplyDialogState extends State<ReplyDialog> {
           onPressed: () {
             Navigator.pop(context);
           },
-          child: const Text('Cancel'),
+          child: const Text('Cancel',
+              style: TextStyle(color: Color(0xFFB6002B))), // Changed text color
         ),
         ElevatedButton(
           onPressed: submitReply, // Call submitReply method directly
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Color(0xFFB6002B), // Changed button color
+          ),
           child: const Text('Send Reply'),
         ),
       ],
@@ -180,4 +213,10 @@ class _ReplyDialogState extends State<ReplyDialog> {
     _replyController.dispose();
     super.dispose();
   }
+}
+
+void main() {
+  runApp(MaterialApp(
+    home: TeacherFeedbackPage(),
+  ));
 }
