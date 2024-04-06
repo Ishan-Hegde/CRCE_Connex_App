@@ -1,10 +1,8 @@
-// ignore_for_file: use_key_in_widget_constructors, library_private_types_in_public_api
-
-import 'package:crce_connex/screens/feedback_section/view.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../screens/assignment_section/view.dart';
-import '../screens/payment_page/view.dart'; // Import the payment_page.dart file
+import 'package:crce_connex/screens/feedback_section/view.dart';
+import 'package:crce_connex/screens/assignment_section/view.dart';
+import 'package:crce_connex/screens/payment_page/view.dart'; // Import the payment_page.dart file
 
 // Added import for FeedbackPage
 
@@ -44,7 +42,7 @@ class _HomePageState extends State<HomePage> {
         actions: [
           IconButton(
             onPressed: () {
-              FirebaseAuth.instance.signOut();
+              FirebaseAuth.instance.signOut(); // Sign out here
             },
             icon: const Icon(Icons.logout),
           ),
@@ -101,7 +99,7 @@ class _HomePageState extends State<HomePage> {
         padding: const EdgeInsets.all(8.0),
         decoration: BoxDecoration(
           color:
-          _currentIndex == index ? Colors.transparent : Colors.transparent,
+              _currentIndex == index ? Colors.transparent : Colors.transparent,
           borderRadius: BorderRadius.circular(8.0),
         ),
         child: Column(
@@ -118,7 +116,7 @@ class _HomePageState extends State<HomePage> {
               style: TextStyle(
                 fontSize: 12.0,
                 fontWeight:
-                _currentIndex == index ? FontWeight.w900 : FontWeight.w400,
+                    _currentIndex == index ? FontWeight.w900 : FontWeight.w400,
                 color: _currentIndex == index ? Colors.redAccent : Colors.white,
               ),
             ),
