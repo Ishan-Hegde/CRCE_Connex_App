@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:crce_connex/screens/feedback_section/view.dart';
-import 'package:crce_connex/screens/assignment_section/view.dart';
-import 'package:crce_connex/screens/payment_page/view.dart'; // Import the payment_page.dart file
+import 'package:crce_connex/screens/student_assets/feedback_section/view.dart';
+import 'package:crce_connex/screens/student_assets/assignment_section/view.dart';
+import 'package:crce_connex/screens/student_assets/payment_page/view.dart'; // Import the payment_page.dart file
 
 // Added import for FeedbackPage
 

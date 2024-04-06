@@ -1,7 +1,7 @@
+import 'package:crce_connex/screens/student_assets/feedback_section/view.dart';
+import 'package:crce_connex/screens/teacher_assets/teacher_assignment_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../screens/assignment_section/view.dart';
-import '../screens/payment_page/view.dart';
 
 void main() {
   runApp(
@@ -50,8 +50,8 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
         index: _currentIndex,
         children: const [
           ProfilePage(),
-          AssignmentPg(),
-          PaymentPage(),
+          TeacherAssignmentPage(),
+          FeedbackModule(),
         ],
       ),
       backgroundColor: Colors.white,
@@ -76,7 +76,7 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
           children: [
             _buildDrawerItem(Icons.person, 'Profile', 0),
             _buildDrawerItem(Icons.assignment, 'Assignments', 1),
-            _buildDrawerItem(Icons.payment, 'Payment', 2),
+            _buildDrawerItem(Icons.feedback, 'Feedback', 2),
           ],
         ),
       ),

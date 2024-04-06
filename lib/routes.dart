@@ -1,7 +1,7 @@
-import 'package:crce_connex/screens/payment_page/view.dart';
+import 'package:crce_connex/screens/student_assets/payment_page/view.dart';
 import 'package:flutter/material.dart';
-import 'screens/assignment_section/view.dart';
-import 'screens/feedback_section/view.dart';
+import 'package:crce_connex/screens/student_assets/feedback_section/view.dart';
+import 'package:crce_connex/screens/student_assets/assignment_section/view.dart';
 
 class Routes {
   static Map<String, WidgetBuilder> getRoutes() {
