@@ -9,10 +9,12 @@ class StudentFeedbackPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Expanded(
+            SizedBox(
+              width: 195, // Set the width of the card
+              height: 195, // Set the height of the card
               child: FeedbackCard(
                 icon: Icons.feedback_outlined,
                 label: 'Leave Feedback',
@@ -30,11 +32,13 @@ class StudentFeedbackPage extends StatelessWidget {
                 },
               ),
             ),
-            const SizedBox(width: 16),
-            Expanded(
+            const SizedBox(height: 16),
+            SizedBox(
+              width: 195, // Set the width of the card
+              height: 195, // Set the height of the card
               child: FeedbackCard(
                 icon: Icons.history_edu_outlined,
-                label: 'Feedback History and Replies',
+                label: 'Feedback History',
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -72,25 +76,23 @@ class FeedbackCard extends StatelessWidget {
       child: InkWell(
         onTap: onPressed,
         child: Padding(
-          padding:
-              const EdgeInsets.all(20.0), // Adjusted padding for smaller cards
+          padding: const EdgeInsets.all(20.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment:
-                MainAxisAlignment.center, // Center the content vertically
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
                 icon,
-                size: 30, // Reduced icon size
-                color: Colors.white, // White icon color
+                size: 50,
+                color: Colors.white,
               ),
-              const SizedBox(height: 20), // Reduced spacing
+              const SizedBox(height: 20),
               Text(
                 label,
                 style: const TextStyle(
-                  fontSize: 14, // Reduced font size
-                  fontWeight: FontWeight.bold, // Bold text
-                  color: Colors.white, // White font color
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -117,21 +119,18 @@ class _FeedbackDialogState extends State<FeedbackDialog> {
   void submitFeedback(String userId) async {
     String feedback = _feedbackController.text.trim();
     if (mounted && feedback.isNotEmpty) {
-      // Check if the widget is mounted
       FirebaseFirestore.instance.collection('feedback').add({
         'text': feedback,
         'userId': userId,
         'timestamp': FieldValue.serverTimestamp(),
       }).then((docRef) {
         if (mounted) {
-          // Check again before showing a Snackbar
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Feedback submitted!')),
           );
         }
       }).catchError((error) {
         if (mounted) {
-          // Check again before showing a Snackbar
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('Failed to submit feedback. Please try again.'),
@@ -139,10 +138,9 @@ class _FeedbackDialogState extends State<FeedbackDialog> {
           );
         }
       });
-      Navigator.pop(context); // Close the dialog
+      Navigator.pop(context);
     } else {
       if (mounted) {
-        // Check again before showing a Snackbar
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Please enter feedback.')),
         );
