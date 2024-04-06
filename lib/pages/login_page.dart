@@ -18,7 +18,7 @@ class _LoginPageState extends State<LoginPage> {
   late bool isTeacherLogin;
   late UserRole selectedRole;
   bool showErrorMessage = false;
-  bool _isDisposed = false; // Add a flag to track disposal
+  bool _isDisposed = false;
 
   @override
   void initState() {
@@ -137,14 +137,6 @@ class _LoginPageState extends State<LoginPage> {
         showErrorMessage = false; // Reset error message visibility
       });
       signUserIn(); // Proceed with sign-in attempt
-    }
-
-    // Show error message for incorrect email/password
-    if (emailController.text != 'correct@email.com' ||
-        passwordController.text != 'correctpassword') {
-      setState(() {
-        showErrorMessage = true;
-      });
     }
   }
 
