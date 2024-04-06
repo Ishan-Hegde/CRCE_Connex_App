@@ -228,46 +228,54 @@ class FeedbackHistoryPage extends StatelessWidget {
               final data = feedbackDocs[index].data() as Map<String, dynamic>;
               final reply =
                   data.containsKey('reply') ? data['reply'] : 'No reply';
-              return ListTile(
-                title: Text(
-                  'Feedback: $feedback',
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-                subtitle: Text('Reply: $reply'),
-                trailing: IconButton(
-                  icon: Icon(Icons.delete),
-                  onPressed: () {
-                    // Show a confirmation dialog before deleting the feedback
-                    showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        title: Text('Confirm Deletion'),
-                        content: Text(
-                            'Are you sure you want to delete this feedback at your end? It will still be available at the teachers end.'),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop(); // Close the dialog
-                            },
-                            child: Text('Cancel'),
+              return Padding(
+                  padding: const EdgeInsets.only(top: 12.0),
+                  child: ListTile(
+                    title: Text(
+                      'Feedback Message:\n$feedback',
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 16),
+                    ),
+                    subtitle: Text(
+                      'Reply: $reply',
+                      style: TextStyle(fontSize: 14),
+                    ),
+                    trailing: IconButton(
+                      icon: Icon(Icons.delete),
+                      onPressed: () {
+                        // Show a confirmation dialog before deleting the feedback
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: Text('Confirm Deletion'),
+                            content: Text(
+                                'Are you sure you want to delete this feedback at your end? It will still be available at the teachers end.'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context)
+                                      .pop(); // Close the dialog
+                                },
+                                child: Text('Cancel'),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  // Call the deleteFeedback function to delete the feedback
+                                  deleteFeedback(feedbackId);
+                                  Navigator.of(context)
+                                      .pop(); // Close the dialog
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text('Feedback deleted')),
+                                  );
+                                },
+                                child: Text('Delete'),
+                              ),
+                            ],
                           ),
-                          TextButton(
-                            onPressed: () {
-                              // Call the deleteFeedback function to delete the feedback
-                              deleteFeedback(feedbackId);
-                              Navigator.of(context).pop(); // Close the dialog
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('Feedback deleted')),
-                              );
-                            },
-                            child: Text('Delete'),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-              );
+                        );
+                      },
+                    ),
+                  ));
             },
           );
         },
