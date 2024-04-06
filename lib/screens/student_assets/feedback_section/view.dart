@@ -72,7 +72,8 @@ class FeedbackCard extends StatelessWidget {
       child: InkWell(
         onTap: onPressed,
         child: Padding(
-          padding: const EdgeInsets.all(20.0), // Increased padding for spacing
+          padding:
+              const EdgeInsets.all(20.0), // Adjusted padding for smaller cards
           child: Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment:
@@ -80,17 +81,18 @@ class FeedbackCard extends StatelessWidget {
             children: [
               Icon(
                 icon,
-                size: 50,
+                size: 30, // Reduced icon size
                 color: Colors.white, // White icon color
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 20), // Reduced spacing
               Text(
                 label,
                 style: const TextStyle(
-                  fontSize: 18,
+                  fontSize: 14, // Reduced font size
                   fontWeight: FontWeight.bold, // Bold text
                   color: Colors.white, // White font color
                 ),
+                textAlign: TextAlign.center,
               ),
             ],
           ),
