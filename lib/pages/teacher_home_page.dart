@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:crce_connex/screens/teacher_assets/teacher_assignment_page.dart';
 import 'package:crce_connex/screens/teacher_assets/teacher_feedback_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:image_picker/image_picker.dart';
 
 void main() {
   runApp(
@@ -123,15 +126,72 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
   }
 }
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key});
 
   @override
+  _ProfilePageState createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  File? _timetableImage;
+
+  Future<void> _pickImage() async {
+    final ImagePicker _picker = ImagePicker();
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      setState(() {
+        _timetableImage = File(pickedFile.path);
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text(
-        'Teacher Profile Page',
-        style: TextStyle(fontSize: 24.0),
+    return Scaffold(
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              'Welcome Teacher!',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 20),
+            GestureDetector(
+              onTap: _pickImage,
+              child: Container(
+                width: 400,
+                height: 400,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: _timetableImage != null
+                    ? Image.file(_timetableImage!, fit: BoxFit.contain)
+                    : Icon(
+                        Icons.add,
+                        size: 60,
+                        color: Colors.grey[600],
+                      ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              'Tap to add timetable',
+              style: TextStyle(
+                fontSize: 18,
+                color: Color.fromARGB(255, 69, 69, 69),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

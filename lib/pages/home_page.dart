@@ -1,10 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:crce_connex/screens/student_assets/feedback_section/view.dart';
 import 'package:crce_connex/screens/student_assets/assignment_section/view.dart';
-import 'package:crce_connex/screens/student_assets/payment_page/view.dart'; // Import the payment_page.dart file
-
-// Added import for FeedbackPage
+import 'package:crce_connex/screens/student_assets/payment_page/view.dart';
 
 void main() {
   runApp(
@@ -128,15 +129,72 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key});
 
   @override
+  _ProfilePageState createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  File? _imageFile; // File variable to store the selected image
+
+  Future<void> _pickImage() async {
+    final ImagePicker _picker = ImagePicker();
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      setState(() {
+        _imageFile = File(pickedFile.path);
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text(
-        'Profile Page',
-        style: TextStyle(fontSize: 24.0),
+    return Scaffold(
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              'Welcome Home!', // Replace with actual user name
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 20),
+            GestureDetector(
+              onTap: _pickImage,
+              child: Container(
+                width: 400,
+                height: 400,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: _imageFile != null
+                    ? Image.file(_imageFile!, fit: BoxFit.contain)
+                    : Icon(
+                        Icons.add,
+                        size: 60,
+                        color: Colors.grey[600],
+                      ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              'Tap to add timetable', // Add instructions or placeholder text
+              style: TextStyle(
+                fontSize: 18,
+                color: Color.fromARGB(255, 69, 69, 69),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
