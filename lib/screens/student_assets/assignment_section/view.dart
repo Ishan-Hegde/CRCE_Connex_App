@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:collection/collection.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 class AssignmentPg extends StatefulWidget {
@@ -16,31 +15,28 @@ class AssignmentPg extends StatefulWidget {
 class Item {
   IconData icon;
   String title;
-  String description;
   bool isDone = false;
+  String buttonText = "Upload";
 
   Item({
     required this.icon,
     required this.title,
-    required this.description,
   });
 }
 
 class AssignmentUI extends State<AssignmentPg> {
-  String? uploadedFileName;
   final List<Item> items = List.generate(
     10,
     (index) => Item(
       icon: Icons.assignment,
       title: 'Assignment ${index + 1}',
-      description: 'Pending',
     ),
   );
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   bool showOnlyChecked = false;
 
-  Future<void> _openFileExplorer() async {
+  Future<void> _openFileExplorer(Item item) async {
     try {
       FilePickerResult? result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
@@ -55,19 +51,9 @@ class AssignmentUI extends State<AssignmentPg> {
         int fileSizeInBytes = await file.length();
 
         if (fileSizeInBytes <= 10 * 1024 * 1024) {
-          Item? uploadedItem = items.firstWhereOrNull(
-            (item) => item.title == 'Assignment ${fileName.split(".")[0]}',
-          );
-
-          if (uploadedItem != null) {
-            setState(() {
-              uploadedItem.isDone = true;
-              uploadedItem.description = 'Checked';
-            });
-          }
-
           setState(() {
-            uploadedFileName = fileName;
+            item.isDone = true;
+            item.buttonText = fileName; // Update button text to fileName
           });
 
           await _updateAssignmentStatus(
@@ -129,19 +115,47 @@ class AssignmentUI extends State<AssignmentPg> {
     }
   }
 
+  Future<void> _showUnsubmitDialog(Item item) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Unsubmit Assignment'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Do you want to unsubmit and delete the uploaded PDF?'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  item.isDone = false;
+                  item.buttonText = "Upload";
+                });
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                'Unsubmit',
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    Text(
-      uploadedFileName ?? 'No file uploaded',
-      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-    );
-
-    Map<String, dynamic>? args =
-        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
-
-    // ignore: unused_local_variable
-    String title = args?['title'] ?? 'Assignments';
-
     List<Item> filteredItems =
         showOnlyChecked ? items.where((item) => item.isDone).toList() : items;
 
@@ -194,7 +208,7 @@ class AssignmentUI extends State<AssignmentPg> {
                   crossAxisCount: 2,
                   crossAxisSpacing: 1.0,
                   mainAxisSpacing: 16.0,
-                  childAspectRatio: 0.77,
+                  childAspectRatio: 0.78,
                 ),
                 itemCount: filteredItems.length,
                 itemBuilder: (context, index) {
@@ -209,94 +223,84 @@ class AssignmentUI extends State<AssignmentPg> {
   }
 
   Widget buildItem(BuildContext context, Item item) {
-    return Container(
-      margin: const EdgeInsets.all(12),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        color: Theme.of(context).cardColor,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            spreadRadius: 2,
-            blurRadius: 5,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(
-            item.icon,
-            size: 60,
-            color: const Color(0xFFB6002B),
-          ),
-          const SizedBox(height: 10),
-          Text(
-            item.title,
-            overflow: TextOverflow.ellipsis,
-            maxLines: 1,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-              color: Theme.of(context).textTheme.bodyLarge!.color,
+    return GestureDetector(
+      onTap: () {
+        if (item.isDone) {
+          _showUnsubmitDialog(item);
+        }
+      },
+      child: Container(
+        margin: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(17),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          color: Theme.of(context).cardColor,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.2),
+              spreadRadius: 3,
+              blurRadius: 5,
+              offset: const Offset(0, 3),
             ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            item.description,
-            style: TextStyle(
-              fontSize: 14,
-              color: Theme.of(context).textTheme.bodyMedium!.color,
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(
+              item.icon,
+              size: 60,
+              color: const Color(0xFFB6002B),
             ),
-          ),
-          const SizedBox(height: 12),
-          Row(
-            children: [
-              ElevatedButton(
-                onPressed: _openFileExplorer,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFB6002B),
-                ),
-                child: const Text(
-                  'Upload',
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
-                ),
+            const SizedBox(height: 10),
+            Text(
+              item.title,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 2,
+              style: TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: 16,
+                color: Theme.of(context).textTheme.bodyLarge!.color,
               ),
-              const SizedBox(width: 8),
-              GestureDetector(
-                onTap: () {
-                  setState(() {
-                    item.isDone = !item.isDone;
-                    print('Item ${item.title} isDone: ${item.isDone}');
-                  });
-                },
-                child: Stack(
-                  children: [
-                    const Icon(
-                      Icons.check_box_outline_blank,
-                      size: 40,
-                      color: Colors.grey,
+            ),
+            const SizedBox(height: 18), // Adjust space for visual alignment
+            Row(
+              children: [
+                if (!item.isDone)
+                  ElevatedButton(
+                    onPressed: () => _openFileExplorer(item),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFB6002B),
+                      padding: EdgeInsets.symmetric(
+                          vertical: 13), // Adjust button height
                     ),
-                    if (item.isDone)
-                      const Positioned(
-                        top: 3,
-                        left: 3,
-                        child: Icon(
-                          Icons.check,
-                          size: 34,
-                          color: Colors.green,
-                        ),
+                    child: Text(
+                      item.buttonText,
+                      style: const TextStyle(color: Colors.white, fontSize: 14),
+                    ),
+                  ),
+                if (item.isDone)
+                  Expanded(
+                    child: Text(
+                      item.buttonText,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: Color(0xFFB6002B),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
                       ),
-                  ],
+                    ),
+                  ),
+                const SizedBox(width: 8),
+                Checkbox(
+                  value: item.isDone,
+                  onChanged: (bool? newValue) {},
+                  activeColor: Colors.green,
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
