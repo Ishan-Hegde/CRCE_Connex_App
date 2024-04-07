@@ -87,7 +87,7 @@ class _FeedbackModuleState extends State<FeedbackModule> {
                       ),
                       SizedBox(height: 4),
                       Text(
-                        'Feedback: $feedback',
+                        'Feedback:\n\n$feedback',
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ],
@@ -95,7 +95,6 @@ class _FeedbackModuleState extends State<FeedbackModule> {
                 ),
                 subtitle: Row(
                   children: [
-                    const Text('Reply: '),
                     ElevatedButton(
                       onPressed: () async {
                         String userId = feedbackDocs[index]['userId'];
