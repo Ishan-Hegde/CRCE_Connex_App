@@ -52,12 +52,11 @@ To run this project locally, follow these steps:
    ```bash
    flutter run
 
-🤝 Contributing
+## 🤝 Contributing
 Contributions are welcome! If you'd like to contribute to this project, please fork the repository and submit a pull request. For major changes, please open an issue first to discuss the proposed changes.
 
-
-📝 License
+## 📝 License
 This project is licensed under the MIT License.
 
-📞 Contact
+## 📞 Contact
 For inquiries or support, please contact hegdeishan10@gmail.com
